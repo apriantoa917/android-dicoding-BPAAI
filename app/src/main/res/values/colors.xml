@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="dicoding_primary_200">#58687c</color>
+    <color name="dicoding_primary_500">#2d3e50</color>
+    <color name="dicoding_primary_700">#041828</color>
+    <color name="dicoding_secondary_200">#65f7fb</color>
+    <color name="dicoding_secondary_500">#12c4c8</color>
+    <color name="dicoding_secondary_700">#009397</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="ivory">#FFFEF7</color>
+    <color name="light_gray">#E1E1E1</color>
+    <color name="gray">#676767</color>
+    <color name="light_red">#E57373</color>
+    <color name="camera_container">#4F12C4C8</color>
+    <color name="light_blue_50">#FFE1F5FE</color>
+    <color name="light_blue_200">#FF81D4FA</color>
+    <color name="light_blue_600">#FF039BE5</color>
+    <color name="light_blue_900">#FF01579B</color>
+
+</resources>

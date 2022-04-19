@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/drawable-v21/app_widget_background.xml" value="0.1675" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/drawable-v21/app_widget_inner_view_background.xml" value="0.1675" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2325" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/drawable/custom_auth_background.xml" value="0.1935" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/drawable/custom_camera_container.xml" value="0.257" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/drawable/custom_form_input.xml" value="0.304" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/drawable/custom_loading_container.xml" value="0.1935" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/drawable/custom_logout_button.xml" value="0.1935" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/drawable/custom_logout_button_ripple.xml" value="0.304" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/drawable/custom_profile_background.xml" value="0.1935" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/drawable/custom_profile_background_ripple.xml" value="0.304" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/drawable/custom_profile_button.xml" value="0.304" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/drawable/custom_profile_button_ripple.xml" value="0.304" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/drawable/custom_signin_button.xml" value="0.1935" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/drawable/custom_story_container.xml" value="0.1935" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/drawable/custom_story_desc.xml" value="0.304" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/drawable/custom_widget_camera.xml" value="0.1935" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/drawable/custom_widget_story.xml" value="0.1935" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/drawable/ic_baseline_access_time_24.xml" value="0.1935" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/drawable/ic_baseline_add_box_24.xml" value="0.257" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/drawable/ic_baseline_arrow_forward_24.xml" value="0.304" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/drawable/ic_baseline_arrow_toolbar.xml" value="0.304" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/drawable/ic_baseline_clear_24.xml" value="0.257" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/drawable/ic_baseline_image_24.xml" value="0.304" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/drawable/ic_baseline_key_24.xml" value="0.257" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/drawable/ic_baseline_refresh_24.xml" value="0.257" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/drawable/ic_baseline_remove_red_eye_24.xml" value="0.304" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/drawable/ic_baseline_translate_24.xml" value="0.304" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/drawable/ic_box.xml" value="0.257" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/drawable/ic_button_jump_up.xml" value="0.2325" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.257" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/drawable/ic_notifications_black_24dp.xml" value="0.257" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/drawable/ic_shutter.xml" value="0.1935" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout-v28/activity_detail.xml" value="0.18541666666666667" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/activity_auth.xml" value="0.18541666666666667" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/activity_camera.xml" value="0.25" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/activity_detail.xml" value="0.33" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/activity_login.xml" value="0.18541666666666667" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/activity_main.xml" value="0.2545289855072464" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/activity_new_story.xml" value="0.25" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/activity_splash_screen.xml" value="0.22" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/activity_web_view.xml" value="0.25" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/custom_dialog_info.xml" value="0.2545289855072464" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/custom_loading.xml" value="0.22" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/fragment_home.xml" value="0.33" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/fragment_login.xml" value="0.33" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/fragment_profile.xml" value="0.33" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/fragment_register.xml" value="0.22" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/fragment_story.xml" value="0.18541666666666667" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/recent_story_widget.xml" value="0.33" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/rv_story.xml" value="0.22083333333333333" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/widget_item.xml" value="0.2515625" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/widget_recent_story.xml" value="0.25" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/menu/activity_main_toolbar.xml" value="0.3625" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/menu/bottom_nav_menu.xml" value="0.3625" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2325" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.2325" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

@@ -1,0 +1,108 @@
+<resources>
+    <string name="app_name">Dico Story</string>
+    <string name="app_widget_text" translatable="false">Dico Stories</string>
+
+    <!-- Title menu xml -->
+    <string name="menu_title_refresh">Refresh</string>
+    <string name="menu_title_blank" translatable="false">" "</string>
+    <string name="menu_title_bottom_nav_home">Home</string>
+    <string name="menu_title_bottom_nav_profile">Profile</string>
+    <string name="menu_title_info_dialog">Information</string>
+
+    <!-- Content Description layout xml -->
+    <string name="content_description_fab_add_story">New Story</string>
+    <string name="content_descrption_btn_gallery">Pick Image from Gallery</string>
+    <string name="content_description_btn_shutter_camera">Take a photo</string>
+    <string name="content_description_btn_switch_camera">Rotate a camera</string>
+    <string name="content_description_avatar_dico">Default Dico Avatar Image</string>
+    <string name="content_description_image_story">User Story Image</string>
+    <string name="content_description_btn_app_setting">Open Related App Settings</string>
+    <string name="content_description_btn_jump_up">Button scroll top</string>
+    <string name="content_description_btn_camera_back">Button Back to homescreen</string>
+    <string name="content_description_btn_camera_info">Button Info Dialog</string>
+
+
+    <!-- Constant Value text -->
+    <string name="const_lorem_ipsum" translatable="false">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
+    <string name="const_person_name" translatable="false">John Doe</string>
+    <string name="const_uploaded_date">uploaded at 30 April 2022 00.00</string>
+    <string name="const_story_description_hint">Write description here</string>
+    <string name="const_copyright" translatable="false">\@ 2022 Aprianto</string>
+    <string name="const_greetings_auth_page">Hi, Welcome to</string>
+    <string name="const_text_login">Login</string>
+    <string name="const_text_email" translatable="false">Email</string>
+    <string name="const_text_password" translatable="false">Password</string>
+    <string name="const_text_auth_question_login">don\'t have an account?</string>
+    <string name="const_text_register">Register</string>
+    <string name="const_text_auth_question_register">Already have an account?</string>
+    <string name="const_text_name">Name</string>
+    <string name="const_text_setting">Setting</string>
+    <string name="const_text_change_language">Change Language</string>
+    <string name="const_text_permission">Set App Permission</string>
+    <string name="const_text_uploaded">Uploaded</string>
+    <string name="const_text_seconds_ago">seconds ago</string>
+    <string name="const_text_minutes_ago">minutes ago</string>
+    <string name="const_text_hours_ago">hours ago</string>
+    <string name="const_text_days_ago">days ago</string>
+    <string name="const_text_time_on">on</string>
+    <string name="const_text_pandora_box">Pandora Box</string>
+    <string name="const_empty_text" translatable="false">NO DATA</string>
+    <string name="const_update_data" translatable="false">Update Data</string>
+
+    <!-- Button text layout xml -->
+    <string name="button_text_ok">ok</string>
+    <string name="button_text_upload_story">Upload Story</string>
+    <string name="button_text_signin">Sign In</string>
+    <string name="button_text_signup">Sign Up</string>
+    <string name="button_text_logout">Logout</string>
+
+    <!-- API Error & Response Code -->
+    <string name="API_success_upload_image">Yeay 😘, the image has been uploaded successfully</string>
+    <string name="API_error_unauthorized">Email address is not registered / Wrong Email or Password</string>
+    <string name="API_error_email_invalid">Invalid email format</string>
+    <string name="API_error_header_token">You\'re Unauthorized, please re-login for renewal Token</string>
+    <string name="API_error_large_payload">Your image exceeds the maximum limit of 1 MB file, please change the image</string>
+    <string name="API_error_send_payload">Error while send image</string>
+    <string name="API_error_fetch_data">Error while fetching data</string>
+
+    <!-- UI Error -->
+    <string name="UI_validation_empty_story_description">Field description must be filled</string>
+    <string name="UI_validation_empty_email_password">Field Email and Password must be filled</string>
+    <string name="UI_validation_invalid_email">Email format is invalid</string>
+    <string name="UI_validation_empty_email_password_name">Field Name, Email and Password must be filled</string>
+    <string name="UI_validation_password_rules">Password must contain at least 6 characters</string>
+    <string name="UI_info_successful_register_user">New user registration is successful, please login using the registered email and password</string>
+    <string name="UI_error_permission_denied">
+        Permision Denied \n\n Please do the following steps : \n
+        1. Open the profile menu and open the App Permissions \n
+        2. Select permission on app info \n
+        3. Select permission for camera \n
+        4. Select the option allow only while using the app
+    </string>
+    <string name="UI_error_camera_take_photo">Failed take a picture</string>
+    <string name="UI_info_homescreen">
+        Hi, Welcome to Dico Story \n\n You can do some action here that is : \n
+        👉🏻 Click the refresh button or swipe up top of the page to refresh the data \n
+        👉🏻 Choose a card to see story details \n
+        👉🏻 Pressing the add button to create a new story \n
+        👉🏻 Pressing the profile menu to open some settings \n
+        👉🏻 Pressing the jump up button to jump on the top of page from last story data
+    </string>
+    <string name="UI_info_profile">
+        You can do some action here that is : \n
+        👉🏻 Select the Change Language menu to change the application language according to the device language \n
+        👉🏻 Select the Set application permissions menu to change the permissions used by the application (related to using the camera to create new stories) \n
+        👉🏻 Select the Logout button to delete the login session, re-login or register a new account
+    </string>
+    <string name="UI_info_camera">
+        Here is an explanation of some of the buttons : \n
+        👉🏻 back button to return to previous page \n
+        👉🏻 information button to display additional information \n
+        👉🏻 gallery button to upload image from gallery \n
+        👉🏻 shutter button to take a picture using the camera \n
+        👉🏻 switch button to rotate camera lens
+    </string>
+    <string name="appwidget_text" translatable="false">EXAMPLE</string>
+    <string name="add_widget" translatable="false">Add widget</string>
+    <string name="app_widget_description" translatable="false">This is an app widget description</string>
+</resources>
