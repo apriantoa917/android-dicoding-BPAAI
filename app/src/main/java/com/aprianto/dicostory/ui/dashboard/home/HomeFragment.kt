@@ -2,6 +2,7 @@ package com.aprianto.dicostory.ui.dashboard.home
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -9,13 +10,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.aprianto.dicostory.R
+import com.aprianto.dicostory.data.repository.remote.ApiConfig
 import com.aprianto.dicostory.data.viewmodel.SettingViewModel
-import com.aprianto.dicostory.data.viewmodel.StoryViewModel
-import com.aprianto.dicostory.data.viewmodel.ViewModelGeneralFactory
+import com.aprianto.dicostory.data.viewmodel.StoryPagerViewModel
 import com.aprianto.dicostory.data.viewmodel.ViewModelSettingFactory
+import com.aprianto.dicostory.data.viewmodel.ViewModelStoryFactory
 import com.aprianto.dicostory.databinding.FragmentHomeBinding
 import com.aprianto.dicostory.ui.dashboard.MainActivity
-import com.aprianto.dicostory.utils.Constanta
 import com.aprianto.dicostory.utils.Helper
 import com.aprianto.dicostory.utils.SettingPreferences
 import com.aprianto.dicostory.utils.dataStore
@@ -24,10 +25,15 @@ import kotlin.concurrent.schedule
 
 class HomeFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
-    private var viewModel: StoryViewModel? = null
+//    private var viewModel: StoryViewModel? = null
+
+
+    private var mainViewModel: StoryPagerViewModel? = null
+    val rvAdapter = StoryAdapter()
     private lateinit var binding: FragmentHomeBinding
-    private val rvAdapter = HomeAdapter()
-    private var tempToken = ""
+
+    //    private val rvAdapter = HomeAdapter()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,22 +47,29 @@ class HomeFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-        viewModel = ViewModelProvider(
+
+//        viewModel = ViewModelProvider(
+//            this,
+//            ViewModelGeneralFactory((activity as MainActivity))
+//        )[StoryViewModel::class.java]
+
+        val apiService = ApiConfig.getApiService()
+        mainViewModel = ViewModelProvider(
             this,
-            ViewModelGeneralFactory((activity as MainActivity))
-        )[StoryViewModel::class.java]
+            ViewModelStoryFactory(apiService)
+        )[StoryPagerViewModel::class.java]
+
         val pref = SettingPreferences.getInstance((activity as MainActivity).dataStore)
         val settingViewModel =
             ViewModelProvider(this, ViewModelSettingFactory(pref))[SettingViewModel::class.java]
-        settingViewModel.getUserPreferences(Constanta.UserPreferences.UserToken.name)
-            .observe(viewLifecycleOwner) { token ->
-                tempToken = StringBuilder("Bearer ").append(token).toString()
-                viewModel?.loadStoryData(tempToken)
-            }
+//        settingViewModel.getUserPreferences(Constanta.UserPreferences.UserToken.name)
+//            .observe(viewLifecycleOwner) { token ->
+//                tempToken = StringBuilder("Bearer ").append(token).toString()
+//                viewModel?.loadStoryData(tempToken)
+//            }
         /* toolbar */
         (activity as AppCompatActivity).setSupportActionBar(binding.toolbar)
 
-        binding.btnJumpUp.visibility = View.GONE
         binding.swipeRefresh.setOnRefreshListener {
             onRefresh()
         }
@@ -64,34 +77,45 @@ class HomeFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context)
             isNestedScrollingEnabled = false
-            adapter = rvAdapter
+            adapter =
+                rvAdapter.withLoadStateFooter(footer = StoryLoadingStateAdapter { rvAdapter.retry() })
         }
-        viewModel?.apply {
-            loading.observe(viewLifecycleOwner) { binding.loading.root.visibility = it }
-            error.observe(
-                viewLifecycleOwner
-            ) { if (it.isNotEmpty()) Helper.showDialogInfo(requireContext(), it) }
-            storyList.observe(viewLifecycleOwner) {
-                rvAdapter.apply {
-                    initData(it)
-                    notifyDataSetChanged()
-                }
-                binding.btnJumpUp.visibility = View.VISIBLE
-            }
+        mainViewModel!!.story.observe(viewLifecycleOwner) {
+            Log.i("TESTING", "Ada data di observe dari paging data : $it")
+            rvAdapter.submitData(
+                lifecycle,
+                it
+            )
+//                rvAdapter.submitData(it)
+            Log.i("TESTING", "Ada data selesai observe dari paging data : $it")
         }
-        binding.btnJumpUp.setOnClickListener {
-            binding.nestedScrollView.smoothScrollTo(0, 0)
-        }
+
         return binding.root
+    }
+
+
+    fun getData() {
+        val adapters = StoryAdapter()
+        binding.rvStory.adapter = adapters.withLoadStateFooter(
+            footer = StoryLoadingStateAdapter {
+                adapters.retry()
+            }
+        )
+//        lifecycleScope.launch {
+//
+//        }
+
+
     }
 
     override fun onRefresh() {
         binding.swipeRefresh.isRefreshing = true
-        viewModel?.loadStoryData(tempToken)
+        rvAdapter.refresh()
         Timer().schedule(2000) {
             binding.swipeRefresh.isRefreshing = false
         }
-        binding.nestedScrollView.smoothScrollTo(0, 0)
+        binding.rvStory.scrollToPosition(0)
+//        binding.nestedScrollView.smoothScrollTo(0, 0)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

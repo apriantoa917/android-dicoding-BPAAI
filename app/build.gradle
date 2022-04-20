@@ -51,8 +51,9 @@ dependencies {
 
     // layout resources
     implementation "com.airbnb.android:lottie:5.0.3"
-    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    implementation 'com.github.bumptech.glide:glide:4.13.1'
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+    implementation "androidx.paging:paging-runtime-ktx:3.1.1"
 
     // retrofit2 API library
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
@@ -73,6 +74,9 @@ dependencies {
     implementation "androidx.camera:camera-camera2:${camerax_version}"
     implementation "androidx.camera:camera-lifecycle:${camerax_version}"
     implementation "androidx.camera:camera-view:${camerax_version}"
+
+    // google maps
+    implementation 'com.google.android.gms:play-services-maps:18.0.2'
 
 
 

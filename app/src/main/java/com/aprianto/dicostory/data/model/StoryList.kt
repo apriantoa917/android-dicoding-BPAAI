@@ -12,4 +12,6 @@ data class StoryList(
 
 	@field:SerializedName("message")
 	val message: String
+
+
 )

@@ -41,17 +41,19 @@
         <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/activity_camera.xml" value="0.25" />
         <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/activity_detail.xml" value="0.33" />
         <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/activity_login.xml" value="0.18541666666666667" />
-        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/activity_main.xml" value="0.2545289855072464" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/activity_new_story.xml" value="0.25" />
         <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/activity_splash_screen.xml" value="0.22" />
         <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/activity_web_view.xml" value="0.25" />
         <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/custom_dialog_info.xml" value="0.2545289855072464" />
         <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/custom_loading.xml" value="0.22" />
-        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/fragment_home.xml" value="0.33" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/fragment_explore.xml" value="0.3625" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/fragment_home.xml" value="0.18" />
         <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/fragment_login.xml" value="0.33" />
         <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/fragment_profile.xml" value="0.33" />
         <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/fragment_register.xml" value="0.22" />
         <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/fragment_story.xml" value="0.18541666666666667" />
+        <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/item_loading.xml" value="0.22" />
         <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/recent_story_widget.xml" value="0.33" />
         <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/rv_story.xml" value="0.22083333333333333" />
         <entry key="..\:/Project/Project Android/KELAS/DicoStory/app/src/main/res/layout/widget_item.xml" value="0.2515625" />

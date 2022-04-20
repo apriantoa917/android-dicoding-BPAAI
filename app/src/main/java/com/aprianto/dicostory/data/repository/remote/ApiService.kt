@@ -1,12 +1,10 @@
 package com.aprianto.dicostory.data.repository.remote
 
-import com.aprianto.dicostory.data.model.Login
-import com.aprianto.dicostory.data.model.Register
-import com.aprianto.dicostory.data.model.StoryList
-import com.aprianto.dicostory.data.model.StoryUpload
+import com.aprianto.dicostory.data.model.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.*
 
 
@@ -28,14 +26,21 @@ interface ApiService {
 
     @GET("stories")
     fun getStoryList(
-        @Header("Authorization") token:String,
-        @Query("size") size:Int
+        @Header("Authorization") token: String,
+        @Query("size") size: Int
     ): Call<StoryList>
+
+    @GET("stories")
+    suspend fun getStoryList(
+        @Header("Authorization") token: String,
+        @Query("page") page: Int,
+        @Query("size") size: Int
+    ): StoryList
 
     @Multipart
     @POST("stories")
     fun doUploadImage(
-        @Header("Authorization") token:String,
+        @Header("Authorization") token: String,
         @Part file: MultipartBody.Part,
         @Part("description") description: RequestBody,
     ): Call<StoryUpload>
