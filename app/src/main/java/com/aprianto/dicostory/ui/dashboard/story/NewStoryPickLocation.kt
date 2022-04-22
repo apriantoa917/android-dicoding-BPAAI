@@ -15,11 +15,9 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.aprianto.dicostory.R
-import com.aprianto.dicostory.data.model.Story
 import com.aprianto.dicostory.data.viewmodel.StoryViewModel
 import com.aprianto.dicostory.data.viewmodel.ViewModelGeneralFactory
 import com.aprianto.dicostory.databinding.ActivityNewStoryPickLocationBinding
-import com.aprianto.dicostory.databinding.CustomTooltipMapsExploreBinding
 import com.aprianto.dicostory.databinding.CustomTooltipPickLocationStoryBinding
 import com.aprianto.dicostory.utils.Constanta
 import com.aprianto.dicostory.utils.Helper
@@ -115,7 +113,7 @@ class NewStoryPickLocation : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
             )?.showInfoWindow()
         }
         mMap.setOnPoiClickListener {
-            Toast.makeText(this,it.name,Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, it.name, Toast.LENGTH_SHORT).show()
             mMap.clear()
             mMap.addMarker(
                 MarkerOptions()
@@ -212,7 +210,7 @@ class NewStoryPickLocation : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
         return null
     }
 
-    override fun getInfoWindow(marker: Marker): View? {
+    override fun getInfoWindow(marker: Marker): View {
         val bindingTooltips =
             CustomTooltipPickLocationStoryBinding.inflate(LayoutInflater.from(this))
         bindingTooltips.location.text = Helper.getStoryLocation(
