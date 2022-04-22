@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import com.aprianto.dicostory.R
 import com.aprianto.dicostory.databinding.ActivityMainBinding
 import com.aprianto.dicostory.ui.auth.AuthActivity
+import com.aprianto.dicostory.ui.dashboard.explore.ExploreFragment
 import com.aprianto.dicostory.ui.dashboard.home.HomeFragment
 import com.aprianto.dicostory.ui.dashboard.profile.ProfileFragment
 import com.aprianto.dicostory.ui.dashboard.story.CameraActivity
@@ -24,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val fragmentProfile = ProfileFragment()
     private val fragmentHome = HomeFragment()
+    private val fragmentExplore = ExploreFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +39,7 @@ class MainActivity : AppCompatActivity() {
             when (it.itemId) {
                 R.id.navigation_home -> switchFragment(fragmentHome)
                 R.id.navigation_profile -> switchFragment(fragmentProfile)
-                R.id.navigation_blank -> routeToStory()
+                R.id.navigation_explore -> switchFragment(fragmentExplore)
             }
             true
         }

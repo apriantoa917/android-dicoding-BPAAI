@@ -7,7 +7,11 @@ object Constanta {
     }
 
     enum class StoryDetail {
-        UserName, ImageURL, ContentDescription, UploadTime
+        UserName, ImageURL, ContentDescription, UploadTime, Latitude, Longitude
+    }
+
+    enum class LocationPicker {
+        isPicked, Latitude, Longitude
     }
 
     const val preferenceName = "Settings"

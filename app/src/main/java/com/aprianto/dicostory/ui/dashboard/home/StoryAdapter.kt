@@ -65,6 +65,13 @@ class StoryAdapter : PagingDataAdapter<Story, StoryAdapter.ViewHolder>(DIFF_CALL
                     val intent = Intent(itemView.context, DetailActivity::class.java)
                     intent.putExtra(Constanta.StoryDetail.UserName.name, story.name)
                     intent.putExtra(Constanta.StoryDetail.ImageURL.name, story.photoUrl)
+                    try {
+                        intent.putExtra(Constanta.StoryDetail.Latitude.name, story.lat.toString())
+                        intent.putExtra(Constanta.StoryDetail.Longitude.name, story.lon.toString())
+                    }catch (e:Exception){
+                        // skip put extra jika location kosong
+                        Log.e("STORY_LOCATION",e.toString())
+                    }
                     intent.putExtra(
                         Constanta.StoryDetail.ContentDescription.name,
                         story.description

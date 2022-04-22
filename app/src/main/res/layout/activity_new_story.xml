@@ -11,19 +11,101 @@
         android:id="@+id/story_image"
         android:layout_width="match_parent"
         android:layout_height="250dp"
-        android:background="@color/light_gray"
+        android:background="@color/light_gray_200"
+        android:contentDescription="@string/content_description_image_story"
         android:scaleType="fitCenter"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars"
-        android:contentDescription="@string/content_description_image_story" />
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <RelativeLayout
+        android:id="@+id/btn_select_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/custom_widget_story"
+        android:padding="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/story_image">
+
+        <ImageView
+            android:id="@+id/ic_pin"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_baseline_map_24"
+            app:tint="@color/white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_toEndOf="@+id/ic_pin"
+            android:text="Pilih lokasi"
+            android:textColor="@color/white" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/preview_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_select_location">
+
+        <TextView
+            android:id="@+id/label_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lokasi Story"
+            android:layout_above="@id/field_location"
+            android:textColor="@color/dicoding_secondary_700"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/btn_clear_location"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_alignParentEnd="true"
+            android:padding="6dp"
+            android:src="@drawable/ic_baseline_clear_24" />
+
+        <TextView
+            android:id="@+id/field_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btn_clear_location"
+            android:layout_marginTop="8dp"
+            android:autofillHints=""
+            android:background="@drawable/custom_story_desc"
+            android:gravity="start"
+            android:lineHeight="20dp"
+            android:padding="8dp"
+            android:textSize="12sp"
+            tools:text="@string/const_lorem_ipsum" />
+    </RelativeLayout>
+
+
+    <TextView
+        android:id="@+id/label_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Deskripsi Story"
+        android:textColor="@color/dicoding_secondary_700"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/preview_location" />
 
     <EditText
         android:id="@+id/story_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
+        android:autofillHints=""
         android:background="@drawable/custom_story_desc"
         android:gravity="start"
         android:hint="@string/const_story_description_hint"
@@ -31,10 +113,10 @@
         android:maxLines="3"
         android:minLines="3"
         android:padding="16dp"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/story_image"
-        android:autofillHints="" />
+        app:layout_constraintTop_toBottomOf="@+id/label_desc" />
 
     <Button
         android:id="@+id/btn_upload"
@@ -48,6 +130,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/story_description" />
+
 
     <include
         android:id="@+id/loading"

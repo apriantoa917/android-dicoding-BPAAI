@@ -23,7 +23,7 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="3dp"
-        android:background="@color/light_gray"
+        android:background="@color/light_gray_200"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
@@ -40,18 +40,29 @@
         app:layout_constraintTop_toBottomOf="@+id/divider"
         app:srcCompat="@drawable/bot" />
 
+    <TextView
+        tools:text="Story Location"
+        android:layout_marginTop="8dp"
+        android:layout_marginHorizontal="16dp"
+        android:id="@+id/label_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/default_avatar" />
+
     <ImageView
         android:id="@+id/story_image"
         android:layout_width="match_parent"
         android:layout_height="400dp"
         android:layout_marginTop="12dp"
-        android:background="@color/light_gray"
+        android:background="@color/light_gray_200"
         android:contentDescription="@string/content_description_image_story"
         android:transitionName="story_image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/default_avatar"
+        app:layout_constraintTop_toBottomOf="@+id/label_location"
         tools:ignore="ImageContrastCheck"
         tools:srcCompat="@tools:sample/avatars" />
 

@@ -7,9 +7,11 @@ import android.app.Dialog
 import android.content.ContentResolver
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.drawable.ColorDrawable
+import android.location.Geocoder
 import android.net.Uri
 import android.os.Environment
 import android.view.Gravity
@@ -17,10 +19,12 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
 import com.aprianto.dicostory.R
-import java.io.File
-import java.io.FileOutputStream
-import java.io.InputStream
-import java.io.OutputStream
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import java.io.*
+import java.lang.StringBuilder
+import java.net.HttpURLConnection
+import java.net.URL
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -207,4 +211,66 @@ object Helper {
             )
         }
     }
+    /* BITMAP from URL*/
+
+    fun bitmapFromURL(context: Context, urlString: String): Bitmap {
+        return try {
+            val url = URL(urlString)
+            val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
+            connection.doInput = true
+            connection.connect()
+            val input: InputStream = connection.inputStream
+            BitmapFactory.decodeStream(input)
+        } catch (e: IOException) {
+            BitmapFactory.decodeResource(context.resources, R.drawable.bot)
+        }
+    }
+
+    fun bitmapDescriptor(bitmap: Bitmap): BitmapDescriptor {
+        return BitmapDescriptorFactory.fromBitmap(bitmap)
+    }
+
+    fun getStoryMapPreview(context: Context, url: String): BitmapDescriptor {
+        return bitmapDescriptor(getResizedBitmap(bitmapFromURL(context, url), 150, 150))
+    }
+
+    fun getResizedBitmap(bm: Bitmap, newWidth: Int, newHeight: Int): Bitmap {
+        val width = bm.width
+        val height = bm.height
+        val scaleWidth = newWidth.toFloat() / width
+        val scaleHeight = newHeight.toFloat() / height
+
+        // CREATE A MATRIX FOR THE MANIPULATION
+        val matrix = Matrix()
+        // RESIZE THE BIT MAP
+        matrix.postScale(scaleWidth, scaleHeight)
+
+        // "RECREATE" THE NEW BITMAP
+        val resizedBitmap = Bitmap.createBitmap(
+            bm, 0, 0, width, height, matrix, false
+        )
+        bm.recycle()
+        return resizedBitmap
+    }
+
+    /* GET LOCATION INFO */
+
+    fun getStoryLocation(
+        context: Context,
+        lat: Double,
+        lon: Double
+    ): String {
+        val geocoder = Geocoder(context)
+        val geoLocation =
+            geocoder.getFromLocation(lat, lon, 1)
+        return if (geoLocation.size > 0) {
+            val location = geoLocation[0]
+            val fullAddress = location.getAddressLine(0)
+            StringBuilder("📌 ")
+                .append(fullAddress).toString()
+        } else {
+            "📌 Location Unknown"
+        }
+    }
+
 }

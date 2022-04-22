@@ -62,11 +62,8 @@ class HomeFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         val pref = SettingPreferences.getInstance((activity as MainActivity).dataStore)
         val settingViewModel =
             ViewModelProvider(this, ViewModelSettingFactory(pref))[SettingViewModel::class.java]
-//        settingViewModel.getUserPreferences(Constanta.UserPreferences.UserToken.name)
-//            .observe(viewLifecycleOwner) { token ->
-//                tempToken = StringBuilder("Bearer ").append(token).toString()
-//                viewModel?.loadStoryData(tempToken)
-//            }
+
+
         /* toolbar */
         (activity as AppCompatActivity).setSupportActionBar(binding.toolbar)
 
@@ -81,13 +78,10 @@ class HomeFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 rvAdapter.withLoadStateFooter(footer = StoryLoadingStateAdapter { rvAdapter.retry() })
         }
         mainViewModel!!.story.observe(viewLifecycleOwner) {
-            Log.i("TESTING", "Ada data di observe dari paging data : $it")
             rvAdapter.submitData(
                 lifecycle,
                 it
             )
-//                rvAdapter.submitData(it)
-            Log.i("TESTING", "Ada data selesai observe dari paging data : $it")
         }
 
         return binding.root

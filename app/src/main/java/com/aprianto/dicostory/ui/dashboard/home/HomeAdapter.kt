@@ -66,6 +66,8 @@ class HomeAdapter :
                         Constanta.StoryDetail.ContentDescription.name,
                         story.description
                     )
+                    intent.putExtra(Constanta.StoryDetail.Latitude.name, story.lat.toString())
+                    intent.putExtra(Constanta.StoryDetail.Longitude.name, story.lon.toString())
                     intent.putExtra(
                         Constanta.StoryDetail.UploadTime.name,
                         /*

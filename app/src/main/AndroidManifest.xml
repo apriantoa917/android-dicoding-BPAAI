@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.aprianto.dicostory">
+    package="com.aprianto.dicostory" >
 
     <uses-permission android:name="android.permission.INTERNET" />
+
     <uses-feature android:name="android.hardware.camera.any" />
+
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -12,14 +16,22 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.DicoStory">
+        android:theme="@style/Theme.DicoStory" >
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCqhkk664pEaOlRGVI1jcnb8dSOmS_OVaw" />
+
+        <activity
+            android:name=".ui.dashboard.story.NewStoryPickLocation"
+            android:exported="false"
+            android:label="@string/title_activity_new_story_pick_location" />
         <activity
             android:name=".ui.dashboard.profile.WebViewActivity"
             android:exported="false" />
 
         <receiver
             android:name=".ui.widget.RecentStoryWidget"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -38,7 +50,7 @@
             android:exported="false" />
         <activity android:name=".ui.dashboard.story.CameraActivity" />
         <activity android:name=".ui.detail.DetailActivity" />
-        <activity android:name=".ui.splashscreen.SplashScreenActivity">
+        <activity android:name=".ui.splashscreen.SplashScreenActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/ic_map"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_baseline_map_24"
+            map:layout_constraintStart_toStartOf="parent"
+            map:layout_constraintTop_toTopOf="parent"
+            map:tint="@color/dicoding_secondary_500" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Pilih / tekan area untuk memilih lokasi"
+            android:textColor="@color/dicoding_secondary_500"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            map:layout_constraintBottom_toBottomOf="@+id/ic_map"
+            map:layout_constraintStart_toEndOf="@+id/ic_map"
+            map:layout_constraintTop_toTopOf="@+id/ic_map" />
+
+        <TextView
+            android:id="@+id/address_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/custom_story_desc"
+            android:hint="Pilih area terlebih dahulu"
+            android:lines="2"
+            android:minLines="2"
+            android:padding="8dp"
+            android:textSize="11sp"
+            map:layout_constraintTop_toBottomOf="@+id/ic_map"
+            tools:layout_editor_absoluteX="16dp" />
+
+        <Button
+            android:id="@+id/btn_select_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/custom_logout_button_ripple"
+            android:backgroundTint="@color/dicoding_secondary_500"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:minHeight="0dp"
+            android:padding="8dp"
+            android:text="Lanjutkan"
+            android:textAllCaps="false"
+            android:textSize="12sp"
+            app:backgroundTint="@null"
+            map:layout_constraintEnd_toEndOf="parent"
+            map:layout_constraintTop_toBottomOf="@+id/address_bar" />
+
+        <TextView
+            android:id="@+id/btn_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text="Batal"
+            android:textColor="@color/dicoding_secondary_500"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_select_location"
+            app:layout_constraintEnd_toStartOf="@+id/btn_select_location"
+            app:layout_constraintTop_toTopOf="@+id/btn_select_location" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.dashboard.story.NewStoryPickLocation" />
+</LinearLayout>

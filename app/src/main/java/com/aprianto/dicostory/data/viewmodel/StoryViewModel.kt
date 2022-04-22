@@ -9,6 +9,8 @@ import com.aprianto.dicostory.data.model.Story
 import com.aprianto.dicostory.data.model.StoryList
 import com.aprianto.dicostory.data.model.StoryUpload
 import com.aprianto.dicostory.data.repository.remote.ApiConfig
+import com.aprianto.dicostory.utils.Constanta
+import com.google.android.gms.maps.model.LatLng
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -17,18 +19,26 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.Console
 import java.io.File
 
 class StoryViewModel(val context: Context) : ViewModel() {
-    var loading = MutableLiveData(View.GONE)
-    var isSuccessUploadStory = MutableLiveData(false)
+    val loading = MutableLiveData(View.GONE)
+    val isSuccessUploadStory = MutableLiveData(false)
     val storyList = MutableLiveData<List<Story>>()
-    var error = MutableLiveData("")
+    val error = MutableLiveData("")
+    val isError = MutableLiveData(true)
+
+
+    val isLocationPicked = MutableLiveData(false) // init for location new story not selected
+    val coordinateLatitude = MutableLiveData(0.0)
+    val coordinateLongitude = MutableLiveData(0.0)
+
     private val TAG = StoryViewModel::class.simpleName
 
     fun loadStoryData(token: String) {
         loading.postValue(View.VISIBLE)
-        val client = ApiConfig.getApiService().getStoryList(token, 30)
+        val client = ApiConfig.getApiService().getStoryList(token, 50)
         client.enqueue(object : Callback<StoryList> {
             override fun onResponse(call: Call<StoryList>, response: Response<StoryList>) {
                 if (response.isSuccessful) {
@@ -47,18 +57,61 @@ class StoryViewModel(val context: Context) : ViewModel() {
         })
     }
 
-    fun uploadNewStory(token: String, image: File, description: String) {
+    fun loadStoryLocationData() {
+        val client = ApiConfig.getApiService().getStoryListLocation(Constanta.tempToken, 100)
+        client.enqueue(object : Callback<StoryList> {
+            override fun onResponse(call: Call<StoryList>, response: Response<StoryList>) {
+                if (response.isSuccessful) {
+                    isError.postValue(false)
+                    storyList.postValue(response.body()?.listStory)
+                } else {
+                    isError.postValue(true)
+                    error.postValue("ERROR ${response.code()} : ${response.message()}")
+                }
+            }
+
+            override fun onFailure(call: Call<StoryList>, t: Throwable) {
+                loading.postValue(View.GONE)
+                isError.postValue(true)
+                Log.e(TAG, "onFailure Call: ${t.message}")
+                error.postValue("${context.getString(R.string.API_error_fetch_data)} : ${t.message}")
+            }
+        })
+    }
+
+    fun uploadNewStory(
+        token: String,
+        image: File,
+        description: String,
+        withLocation: Boolean = false,
+        lat: String? = null,
+        lon: String? = null
+    ) {
         loading.postValue(View.VISIBLE)
         "${image.length() / 1024 / 1024} MB" // manual parse from bytes to Mega Bytes
         val storyDescription = description.toRequestBody("text/plain".toMediaType())
+
         val requestImageFile = image.asRequestBody("image/jpeg".toMediaTypeOrNull())
         val imageMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
             "photo",
             image.name,
             requestImageFile
         )
-        val client =
-            ApiConfig.getApiService().doUploadImage(token, imageMultipart, storyDescription)
+        val client = if (withLocation) {
+            val positionLat = lat?.toRequestBody("text/plain".toMediaType())
+            val positionLon = lon?.toRequestBody("text/plain".toMediaType())
+            ApiConfig.getApiService()
+                .doUploadImage(
+                    token,
+                    imageMultipart,
+                    storyDescription,
+                    positionLat!!,
+                    positionLon!!
+                )
+        } else {
+            ApiConfig.getApiService()
+                .doUploadImage(token, imageMultipart, storyDescription)
+        }
         client.enqueue(object : Callback<StoryUpload> {
             override fun onResponse(call: Call<StoryUpload>, response: Response<StoryUpload>) {
                 when (response.code()) {

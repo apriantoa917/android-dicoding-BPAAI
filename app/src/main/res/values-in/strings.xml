@@ -95,4 +95,5 @@
         👉🏻 tombol shutter untuk menjepret gambar menggunakan kamera \n
         👉🏻 tombol switch untuk memutar lensa kamera
     </string>
+    <string name="title_activity_new_story_pick_location">NewStoryPickLocation</string>
 </resources>

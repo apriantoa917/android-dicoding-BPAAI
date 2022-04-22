@@ -9,9 +9,12 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="ivory">#FFFEF7</color>
-    <color name="light_gray">#E1E1E1</color>
+    <color name="light_gray_100">#EDEDED</color>
+    <color name="light_gray_200">#E1E1E1</color>
+    <color name="light_gray_500">#BABABA</color>
     <color name="gray">#676767</color>
     <color name="light_red">#E57373</color>
+    <color name="red">#F44336</color>
     <color name="camera_container">#4F12C4C8</color>
     <color name="light_blue_50">#FFE1F5FE</color>
     <color name="light_blue_200">#FF81D4FA</color>
