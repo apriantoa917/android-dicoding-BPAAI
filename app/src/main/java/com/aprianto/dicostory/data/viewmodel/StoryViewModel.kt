@@ -33,6 +33,7 @@ class StoryViewModel(val context: Context) : ViewModel() {
     val isLocationPicked = MutableLiveData(false) // init for location new story not selected
     val coordinateLatitude = MutableLiveData(0.0)
     val coordinateLongitude = MutableLiveData(0.0)
+    val coordinateTemp = MutableLiveData(Constanta.indonesiaLocation)
 
     private val TAG = StoryViewModel::class.simpleName
 

@@ -1,5 +1,7 @@
 package com.aprianto.dicostory.utils
 
+import com.google.android.gms.maps.model.LatLng
+
 object Constanta {
 
     enum class UserPreferences {
@@ -14,6 +16,7 @@ object Constanta {
         isPicked, Latitude, Longitude
     }
 
+    val indonesiaLocation = LatLng(-2.3932797, 108.8507139)
     const val preferenceName = "Settings"
     const val preferenceDefaultValue = "Not Set"
     const val preferenceDefaultDateValue = "2000/04/30 00:00:00"
