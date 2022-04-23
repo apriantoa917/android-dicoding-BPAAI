@@ -29,7 +29,7 @@ class HomeFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
 
     private var mainViewModel: StoryPagerViewModel? = null
-    val rvAdapter = StoryAdapter()
+    private val rvAdapter = StoryAdapter()
     private lateinit var binding: FragmentHomeBinding
 
     //    private val rvAdapter = HomeAdapter()
@@ -38,7 +38,6 @@ class HomeFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -56,7 +55,7 @@ class HomeFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         val apiService = ApiConfig.getApiService()
         mainViewModel = ViewModelProvider(
             this,
-            ViewModelStoryFactory(apiService)
+            ViewModelStoryFactory(requireContext(), apiService)
         )[StoryPagerViewModel::class.java]
 
         val pref = SettingPreferences.getInstance((activity as MainActivity).dataStore)
@@ -79,27 +78,12 @@ class HomeFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         }
         mainViewModel!!.story.observe(viewLifecycleOwner) {
             rvAdapter.submitData(
-                lifecycle,
+                viewLifecycleOwner.lifecycle,
                 it
             )
         }
 
         return binding.root
-    }
-
-
-    fun getData() {
-        val adapters = StoryAdapter()
-        binding.rvStory.adapter = adapters.withLoadStateFooter(
-            footer = StoryLoadingStateAdapter {
-                adapters.retry()
-            }
-        )
-//        lifecycleScope.launch {
-//
-//        }
-
-
     }
 
     override fun onRefresh() {
@@ -109,7 +93,6 @@ class HomeFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             binding.swipeRefresh.isRefreshing = false
         }
         binding.rvStory.scrollToPosition(0)
-//        binding.nestedScrollView.smoothScrollTo(0, 0)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

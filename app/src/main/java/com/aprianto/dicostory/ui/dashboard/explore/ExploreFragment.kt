@@ -88,13 +88,19 @@ class ExploreFragment : Fragment(), OnMapReadyCallback, GoogleMap.InfoWindowAdap
         mMap.uiSettings.isIndoorLevelPickerEnabled = true
         mMap.uiSettings.isCompassEnabled = true
         mMap.uiSettings.isMapToolbarEnabled = true
-
+        mMap.uiSettings.isIndoorLevelPickerEnabled = true
+        mMap.uiSettings.isTiltGesturesEnabled = true
 
 
         storyViewModel.storyList.observe(viewLifecycleOwner) { storyList ->
             for (story in storyList) {
                 mMap.addMarker(
-                    MarkerOptions().position(LatLng(story.lat as Double, story.lon as Double))
+                    MarkerOptions().position(
+                        LatLng(
+                            story.lat?.toDouble() ?: 0.0,
+                            story.lon?.toDouble() ?: 0.0
+                        )
+                    )
                 )?.tag = story
             }
         }

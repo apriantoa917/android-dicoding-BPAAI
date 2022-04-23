@@ -1,4 +1,4 @@
-package com.aprianto.dicostory.data.repository.remote.StoryPaging
+package com.aprianto.dicostory.data.repository.remote.storypaging
 
 import androidx.lifecycle.LiveData
 import androidx.paging.Pager

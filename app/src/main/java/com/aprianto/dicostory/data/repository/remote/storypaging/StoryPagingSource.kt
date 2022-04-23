@@ -1,19 +1,11 @@
-package com.aprianto.dicostory.data.repository.remote.StoryPaging
+package com.aprianto.dicostory.data.repository.remote.storypaging
 
 import android.util.Log
-import android.view.View
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.aprianto.dicostory.R
 import com.aprianto.dicostory.data.model.Story
-import com.aprianto.dicostory.data.model.StoryList
-import com.aprianto.dicostory.data.repository.remote.ApiConfig
 import com.aprianto.dicostory.data.repository.remote.ApiService
 import com.aprianto.dicostory.utils.Constanta
-import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class StoryPagingSource(private val apiService: ApiService) :
     PagingSource<Int, Story>() {
@@ -32,10 +24,8 @@ class StoryPagingSource(private val apiService: ApiService) :
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Story> {
         return try {
             val position = params.key ?: INITIAL_PAGE_INDEX
-
             val data =
                 apiService.getStoryList(Constanta.tempToken, position, params.loadSize).listStory
-            Log.i("TESTING", "FETCHED DATA -> $data")
             LoadResult.Page(
                 data = data,
                 prevKey = if (position == INITIAL_PAGE_INDEX) null else position - 1,
