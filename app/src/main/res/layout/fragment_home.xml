@@ -42,7 +42,6 @@
             android:layout_height="wrap_content"
             android:nestedScrollingEnabled="false"
             android:paddingHorizontal="16dp"
-            android:paddingTop="16dp"
             tools:itemCount="3"
             tools:listitem="@layout/rv_story" />
 

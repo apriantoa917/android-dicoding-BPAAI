@@ -4,12 +4,9 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources
-import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
-import android.os.StrictMode
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -17,18 +14,13 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.ColorInt
-import androidx.annotation.DrawableRes
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.aprianto.dicostory.R
 import com.aprianto.dicostory.data.model.Story
 import com.aprianto.dicostory.data.viewmodel.StoryViewModel
-import com.aprianto.dicostory.data.viewmodel.ViewModelGeneralFactory
 import com.aprianto.dicostory.databinding.CustomTooltipMapsExploreBinding
 import com.aprianto.dicostory.databinding.FragmentExploreBinding
 import com.aprianto.dicostory.ui.dashboard.MainActivity
@@ -41,7 +33,10 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.*
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
 
 
 class ExploreFragment : Fragment(), OnMapReadyCallback, GoogleMap.InfoWindowAdapter,
@@ -49,30 +44,25 @@ class ExploreFragment : Fragment(), OnMapReadyCallback, GoogleMap.InfoWindowAdap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var mMap: GoogleMap
     private lateinit var binding: FragmentExploreBinding
-    val storyViewModel: StoryViewModel by viewModels {
-        ViewModelGeneralFactory(requireContext())
-    }
+    private val storyViewModel: StoryViewModel by viewModels()
     private val zoomLevel =
         arrayOf("Tampilan Default", "Provinsi", "Kota Saya", "Kecamatan Saya", "Sekitar Saya")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
+    ): View {
         binding = FragmentExploreBinding.inflate(inflater, container, false)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+
+        /* set up dropdown location scope */
         val adapter: ArrayAdapter<String> = ArrayAdapter<String>(
             requireContext(),
             android.R.layout.simple_spinner_item, zoomLevel
         )
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        binding.zoomType.adapter = adapter;
-        binding.zoomType.setOnItemSelectedListener(this);
-
-        /* allow marker show from url */
-        val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
-        StrictMode.setThreadPolicy(policy)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.zoomType.adapter = adapter
+        binding.zoomType.onItemSelectedListener = this
 
         val mapFragment =
             (childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment)
@@ -84,14 +74,12 @@ class ExploreFragment : Fragment(), OnMapReadyCallback, GoogleMap.InfoWindowAdap
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        mMap.uiSettings.isZoomControlsEnabled = true
         mMap.uiSettings.isIndoorLevelPickerEnabled = true
         mMap.uiSettings.isCompassEnabled = true
         mMap.uiSettings.isMapToolbarEnabled = true
-        mMap.uiSettings.isIndoorLevelPickerEnabled = true
         mMap.uiSettings.isTiltGesturesEnabled = true
 
-
+        /* init story with location data -> add markers */
         storyViewModel.storyList.observe(viewLifecycleOwner) { storyList ->
             for (story in storyList) {
                 mMap.addMarker(
@@ -113,29 +101,13 @@ class ExploreFragment : Fragment(), OnMapReadyCallback, GoogleMap.InfoWindowAdap
         getMyLocation()
         setMapStyle()
 
-        storyViewModel.loadStoryLocationData()
+        storyViewModel.loadStoryLocationData(
+            requireContext(),
+            (activity as MainActivity).getUserToken()
+        )
         storyViewModel.coordinateTemp.observe(this) {
             CameraUpdateFactory.newLatLngZoom(it, 4f)
         }
-    }
-
-
-    private fun vectorToBitmap(@DrawableRes id: Int, @ColorInt color: Int): BitmapDescriptor {
-        val vectorDrawable = ResourcesCompat.getDrawable(resources, id, null)
-        if (vectorDrawable == null) {
-            Log.e("BitmapHelper", "Resource not found")
-            return BitmapDescriptorFactory.defaultMarker()
-        }
-        val bitmap = Bitmap.createBitmap(
-            vectorDrawable.intrinsicWidth,
-            vectorDrawable.intrinsicHeight,
-            Bitmap.Config.ARGB_8888
-        )
-        val canvas = Canvas(bitmap)
-        vectorDrawable.setBounds(0, 0, canvas.width, canvas.height)
-        DrawableCompat.setTint(vectorDrawable, color)
-        vectorDrawable.draw(canvas)
-        return BitmapDescriptorFactory.fromBitmap(bitmap)
     }
 
     private fun routeToDetailStory(data: Story) {
@@ -171,6 +143,8 @@ class ExploreFragment : Fragment(), OnMapReadyCallback, GoogleMap.InfoWindowAdap
         ) { isGranted: Boolean ->
             if (isGranted) {
                 getMyLocation()
+            } else {
+                Helper.notifyGivePermission(requireContext(), "Berikan izin untuk lokasi")
             }
         }
 
@@ -251,7 +225,6 @@ class ExploreFragment : Fragment(), OnMapReadyCallback, GoogleMap.InfoWindowAdap
         mMap.animateCamera(
             CameraUpdateFactory.newLatLngZoom(storyViewModel.coordinateTemp.value!!, level)
         )
-
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {

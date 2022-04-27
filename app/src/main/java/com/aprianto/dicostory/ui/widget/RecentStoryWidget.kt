@@ -6,20 +6,19 @@ import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import android.widget.RemoteViews
 import androidx.core.net.toUri
+import androidx.core.os.bundleOf
 import com.aprianto.dicostory.R
-import com.aprianto.dicostory.ui.dashboard.profile.WebViewActivity
+import com.aprianto.dicostory.ui.detail.DetailActivity
+import com.aprianto.dicostory.utils.Constanta
 
-
-/**
- * Implementation of App Widget functionality.
- */
 class RecentStoryWidget : AppWidgetProvider() {
     companion object {
 
-        private const val WEBVIEW_ACTION = "WEBVIEW_ACTION"
-        const val EXTRA_ITEM = "EXTRA_ITEM"
+        private const val ITEMS_CLICK = "ITEMS_CLICK_FROM_LIST"
+        const val BROADCAST_UPDATE = "RECEIVE_BROADCAST_UPDATES"
 
         private fun updateAppWidget(
             context: Context,
@@ -33,8 +32,9 @@ class RecentStoryWidget : AppWidgetProvider() {
             val views = RemoteViews(context.packageName, R.layout.widget_recent_story)
             views.setRemoteAdapter(R.id.stack_view, intent)
 
+            /* if image items click -> forward to onRecieve*/
             val toastIntent = Intent(context, RecentStoryWidget::class.java)
-            toastIntent.action = WEBVIEW_ACTION
+            toastIntent.action = ITEMS_CLICK
             toastIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
 
             val toastPendingIntent = PendingIntent.getBroadcast(
@@ -55,7 +55,6 @@ class RecentStoryWidget : AppWidgetProvider() {
         appWidgetManager: AppWidgetManager,
         appWidgetIds: IntArray
     ) {
-        // There may be multiple widgets active, so update all of them
         for (appWidgetId in appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId)
         }
@@ -64,11 +63,25 @@ class RecentStoryWidget : AppWidgetProvider() {
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
         if (intent.action != null) {
-            if (intent.action == WEBVIEW_ACTION) {
-                val webviewIntent = Intent(context, WebViewActivity::class.java)
-                webviewIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                webviewIntent.putExtra(WebViewActivity.EXTRA_WEBVIEW, "https://www.dicoding.com/about")
-                context.startActivity(webviewIntent)
+            when (intent.action) {
+                ITEMS_CLICK -> {
+                    /* if items widget click -> open detail activity */
+                    val bundle = intent.extras
+                    bundle?.let { params ->
+                        val detailIntent = Intent(context, DetailActivity::class.java)
+                        detailIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        val extras = bundleOf(
+                            Constanta.StoryDetail.UserName.name to params.get(Constanta.StoryDetail.UserName.name),
+                            Constanta.StoryDetail.ImageURL.name to params.get(Constanta.StoryDetail.ImageURL.name),
+                            Constanta.StoryDetail.Longitude.name to params.get(Constanta.StoryDetail.Longitude.name),
+                            Constanta.StoryDetail.Latitude.name to params.get(Constanta.StoryDetail.Latitude.name),
+                            Constanta.StoryDetail.ContentDescription.name to params.get(Constanta.StoryDetail.ContentDescription.name),
+                            Constanta.StoryDetail.UploadTime.name to params.get(Constanta.StoryDetail.UploadTime.name),
+                        )
+                        detailIntent.putExtras(extras)
+                        context.startActivity(detailIntent)
+                    }
+                }
             }
         }
     }

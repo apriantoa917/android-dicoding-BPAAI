@@ -1,11 +1,9 @@
 package com.aprianto.dicostory.data.viewmodel
 
-import android.content.Context
 import android.util.Log
 import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.aprianto.dicostory.R
 import com.aprianto.dicostory.data.model.Login
 import com.aprianto.dicostory.data.model.Register
 import com.aprianto.dicostory.data.repository.remote.ApiConfig
@@ -14,7 +12,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class AuthViewModel(val context: Context) : ViewModel() {
+class AuthViewModel : ViewModel() {
 
     var loading = MutableLiveData(View.GONE)
     val error = MutableLiveData("")
@@ -32,12 +30,11 @@ class AuthViewModel(val context: Context) : ViewModel() {
         val client = ApiConfig.getApiService().doLogin(email, password)
         client.enqueue(object : Callback<Login> {
             override fun onResponse(call: Call<Login>, response: Response<Login>) {
-                // parsing manual error code API
-                when (response.code()) {
-                    400 -> error.postValue(context.getString(R.string.API_error_email_invalid))
-                    401 -> error.postValue(context.getString(R.string.API_error_unauthorized))
-                    200 -> loginResult.postValue(response.body())
-                    else -> error.postValue("ERROR ${response.code()} : ${response.message()}")
+                if (response.isSuccessful) {
+                    loginResult.postValue(response.body())
+                } else {
+                    val errorBody: Login? = response.body()
+                    error.postValue(errorBody?.message)
                 }
                 loading.postValue(View.GONE)
             }
@@ -55,11 +52,11 @@ class AuthViewModel(val context: Context) : ViewModel() {
         val client = ApiConfig.getApiService().doRegister(name, email, password)
         client.enqueue(object : Callback<Register> {
             override fun onResponse(call: Call<Register>, response: Response<Register>) {
-                // parsing manual error code API
-                when (response.code()) {
-                    400 -> error.postValue(context.getString(R.string.API_error_email_invalid))
-                    201 -> registerResult.postValue(response.body())
-                    else -> error.postValue("ERROR ${response.code()} : ${response.errorBody()}")
+                if (response.isSuccessful) {
+                    registerResult.postValue(response.body())
+                } else {
+                    val errorBody: Register? = response.body()
+                    error.postValue(errorBody?.message)
                 }
                 loading.postValue(View.GONE)
             }

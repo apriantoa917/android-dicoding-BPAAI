@@ -1,6 +1,9 @@
 package com.aprianto.dicostory.data.repository.remote
 
-import com.aprianto.dicostory.data.model.*
+import com.aprianto.dicostory.data.model.Login
+import com.aprianto.dicostory.data.model.Register
+import com.aprianto.dicostory.data.model.StoryList
+import com.aprianto.dicostory.data.model.StoryUpload
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -36,6 +39,12 @@ interface ApiService {
         @Query("page") page: Int,
         @Query("size") size: Int
     ): StoryList
+
+    @GET("stories")
+    suspend fun getStoryListWidget(
+        @Header("Authorization") token: String,
+        @Query("size") size: Int = 10
+    ): Response<StoryList>
 
     @GET("stories?location=1")
     fun getStoryListLocation(

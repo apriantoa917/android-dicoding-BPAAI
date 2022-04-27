@@ -6,11 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.aprianto.dicostory.R
 import com.aprianto.dicostory.data.viewmodel.AuthViewModel
 import com.aprianto.dicostory.data.viewmodel.SettingViewModel
-import com.aprianto.dicostory.data.viewmodel.ViewModelGeneralFactory
 import com.aprianto.dicostory.data.viewmodel.ViewModelSettingFactory
 import com.aprianto.dicostory.databinding.FragmentLoginBinding
 import com.aprianto.dicostory.utils.Constanta
@@ -24,7 +24,7 @@ class LoginFragment : Fragment() {
         fun newInstance() = LoginFragment()
     }
 
-    private var viewModel: AuthViewModel? = null
+    private val viewModel: AuthViewModel by activityViewModels()
     private lateinit var binding: FragmentLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,11 +48,8 @@ class LoginFragment : Fragment() {
         val pref = SettingPreferences.getInstance((activity as AuthActivity).dataStore)
         val settingViewModel =
             ViewModelProvider(this, ViewModelSettingFactory(pref))[SettingViewModel::class.java]
-        viewModel = ViewModelProvider(
-            this,
-            ViewModelGeneralFactory((activity as AuthActivity))
-        )[AuthViewModel::class.java]
-        viewModel?.let { vm ->
+
+        viewModel.let { vm ->
             vm.loginResult.observe(viewLifecycleOwner) { login ->
                 // success login process triggered -> save preferences
                 settingViewModel.setUserPreferences(
@@ -79,27 +76,24 @@ class LoginFragment : Fragment() {
         binding.btnAction.setOnClickListener {
             val email = binding.edEmail.text.toString()
             val password = binding.edPassword.text.toString()
+//            if(binding.edEmail.error.isNotEmpty() and binding.edPassword.error.isNotEmpty()){
+//                binding.edEmail.requestFocus()
+//            }else{
+//                viewModel.login(email, password)
+//            }
             when {
+
                 email.isEmpty() or password.isEmpty() -> {
-                    Helper.showDialogInfo(
-                        requireContext(),
-                        getString(R.string.UI_validation_empty_email_password)
-                    )
+                    binding.edEmail.error
                 }
                 !email.matches(Constanta.emailPattern) -> {
-                    Helper.showDialogInfo(
-                        requireContext(),
-                        getString(R.string.UI_validation_invalid_email)
-                    )
+                    binding.edEmail.error
                 }
-                password.length <= 6 -> {
-                    Helper.showDialogInfo(
-                        requireContext(),
-                        getString(R.string.UI_validation_password_rules)
-                    )
+                password.length < 6 -> {
+                    binding.edPassword.error
                 }
                 else -> {
-                    viewModel?.login(email, password)
+                    viewModel.login(email, password)
                 }
             }
         }

@@ -11,5 +11,4 @@ import com.aprianto.dicostory.data.repository.room.StoryRepository
 class StoryPagerViewModel(storyRepository: StoryRepository) : ViewModel() {
     val story: LiveData<PagingData<Story>> =
         storyRepository.getStory().cachedIn(viewModelScope)
-
 }

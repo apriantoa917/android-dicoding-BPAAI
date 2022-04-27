@@ -9,12 +9,12 @@ import com.aprianto.dicostory.data.database.StoryDatabase
 import com.aprianto.dicostory.data.model.Story
 import com.aprianto.dicostory.data.model.StoryRemoteKeys
 import com.aprianto.dicostory.data.repository.remote.ApiService
-import com.aprianto.dicostory.utils.Constanta
 
 @OptIn(ExperimentalPagingApi::class)
 class StoryRemoteMediator(
     private val database: StoryDatabase,
-    private val apiService: ApiService
+    private val apiService: ApiService,
+    private val token: String
 ) : RemoteMediator<Int, Story>() {
 
     private companion object {
@@ -46,7 +46,7 @@ class StoryRemoteMediator(
         }
         return try {
             val responseData =
-                apiService.getStoryList(Constanta.tempToken, page, state.config.pageSize).listStory
+                apiService.getStoryList(token, page, state.config.pageSize).listStory
             val endOfPaginationReached = responseData.isEmpty()
             database.withTransaction {
                 if (loadType == LoadType.REFRESH) {
@@ -79,12 +79,5 @@ class StoryRemoteMediator(
         }
     }
 
-    private suspend fun getRemoteKeyClosestToCurrentPosition(state: PagingState<Int, Story>): StoryRemoteKeys? {
-        return state.anchorPosition?.let { position ->
-            state.closestItemToPosition(position)?.id?.let { id ->
-                database.storyRemoteKeysDao().getRemoteKeysId(id)
-            }
-        }
-    }
 
 }

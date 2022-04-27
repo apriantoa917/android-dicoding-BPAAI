@@ -9,6 +9,8 @@
     <string name="menu_title_bottom_nav_explore">Explore</string>
     <string name="menu_title_bottom_nav_profile">Profile</string>
     <string name="menu_title_info_dialog">Information</string>
+    <string name="menu_title_bottom_nav_downloaded">Downloaded</string>
+
 
     <!-- Content Description layout xml -->
     <string name="content_description_fab_add_story">New Story</string>
@@ -56,6 +58,7 @@
     <string name="button_text_signin">Sign In</string>
     <string name="button_text_signup">Sign Up</string>
     <string name="button_text_logout">Logout</string>
+    <string name="button_text_download">Download Story</string>
 
     <!-- API Error & Response Code -->
     <string name="API_success_upload_image">Yeay 😘, the image has been uploaded successfully</string>

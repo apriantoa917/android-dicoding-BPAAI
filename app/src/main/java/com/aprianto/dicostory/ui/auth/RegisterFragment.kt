@@ -7,17 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import com.aprianto.dicostory.R
 import com.aprianto.dicostory.data.viewmodel.AuthViewModel
-import com.aprianto.dicostory.data.viewmodel.ViewModelGeneralFactory
 import com.aprianto.dicostory.databinding.FragmentRegisterBinding
 import com.aprianto.dicostory.utils.Constanta
 import com.aprianto.dicostory.utils.Helper
 
 class RegisterFragment : Fragment() {
 
-    private var viewModel: AuthViewModel? = null
+    private val viewModel: AuthViewModel by activityViewModels()
     private lateinit var binding: FragmentRegisterBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,11 +37,8 @@ class RegisterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(
-            this,
-            ViewModelGeneralFactory((activity as AuthActivity))
-        )[AuthViewModel::class.java]
-        viewModel?.let { vm ->
+
+        viewModel.let { vm ->
             vm.registerResult.observe(viewLifecycleOwner) { register ->
                 if (!register.error) {
                     val dialog = Helper.dialogInfoBuilder(
@@ -75,25 +71,16 @@ class RegisterFragment : Fragment() {
             val password = binding.edPassword.text.toString()
             when {
                 email.isEmpty() or password.isEmpty() or nama.isEmpty() -> {
-                    Helper.showDialogInfo(
-                        requireContext(),
-                        getString(R.string.UI_validation_empty_email_password)
-                    )
+                    binding.edEmail.error
                 }
                 !email.matches(Constanta.emailPattern) -> {
-                    Helper.showDialogInfo(
-                        requireContext(),
-                        getString(R.string.UI_validation_invalid_email)
-                    )
+                    binding.edEmail.error
                 }
-                password.length <= 6 -> {
-                    Helper.showDialogInfo(
-                        requireContext(),
-                        getString(R.string.UI_validation_password_rules)
-                    )
+                password.length < 6 -> {
+                    binding.edPassword.error
                 }
                 else -> {
-                    viewModel?.register(nama, email, password)
+                    viewModel.register(nama, email, password)
                 }
             }
         }

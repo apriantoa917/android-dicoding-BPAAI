@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.aprianto.dicostory.utils.SettingPreferences
 
-class ViewModelSettingFactory(private val pref: SettingPreferences) :
+class   ViewModelSettingFactory(private val pref: SettingPreferences) :
     ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")

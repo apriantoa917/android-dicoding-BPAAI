@@ -3,14 +3,14 @@ package com.aprianto.dicostory.data.viewmodel
 import android.content.Context
 import android.util.Log
 import android.view.View
-import androidx.lifecycle.*
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.aprianto.dicostory.R
 import com.aprianto.dicostory.data.model.Story
 import com.aprianto.dicostory.data.model.StoryList
 import com.aprianto.dicostory.data.model.StoryUpload
 import com.aprianto.dicostory.data.repository.remote.ApiConfig
 import com.aprianto.dicostory.utils.Constanta
-import com.google.android.gms.maps.model.LatLng
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -19,10 +19,9 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.Console
 import java.io.File
 
-class StoryViewModel(val context: Context) : ViewModel() {
+class StoryViewModel : ViewModel() {
     val loading = MutableLiveData(View.GONE)
     val isSuccessUploadStory = MutableLiveData(false)
     val storyList = MutableLiveData<List<Story>>()
@@ -37,29 +36,8 @@ class StoryViewModel(val context: Context) : ViewModel() {
 
     private val TAG = StoryViewModel::class.simpleName
 
-    fun loadStoryData(token: String) {
-        loading.postValue(View.VISIBLE)
-        val client = ApiConfig.getApiService().getStoryList(token, 50)
-        client.enqueue(object : Callback<StoryList> {
-            override fun onResponse(call: Call<StoryList>, response: Response<StoryList>) {
-                if (response.isSuccessful) {
-                    storyList.postValue(response.body()?.listStory)
-                } else {
-                    error.postValue("ERROR ${response.code()} : ${response.message()}")
-                }
-                loading.postValue(View.GONE)
-            }
-
-            override fun onFailure(call: Call<StoryList>, t: Throwable) {
-                loading.postValue(View.GONE)
-                Log.e(TAG, "onFailure Call: ${t.message}")
-                error.postValue("${context.getString(R.string.API_error_fetch_data)} : ${t.message}")
-            }
-        })
-    }
-
-    fun loadStoryLocationData() {
-        val client = ApiConfig.getApiService().getStoryListLocation(Constanta.tempToken, 100)
+    fun loadStoryLocationData(context: Context, token: String) {
+        val client = ApiConfig.getApiService().getStoryListLocation(token, 100)
         client.enqueue(object : Callback<StoryList> {
             override fun onResponse(call: Call<StoryList>, response: Response<StoryList>) {
                 if (response.isSuccessful) {
@@ -81,6 +59,7 @@ class StoryViewModel(val context: Context) : ViewModel() {
     }
 
     fun uploadNewStory(
+        context: Context,
         token: String,
         image: File,
         description: String,

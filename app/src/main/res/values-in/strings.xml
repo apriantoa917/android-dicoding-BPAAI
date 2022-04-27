@@ -9,6 +9,8 @@
     <string name="menu_title_bottom_nav_explore">Explore</string>
     <string name="menu_title_bottom_nav_profile">Profil</string>
     <string name="menu_title_info_dialog">Informasi</string>
+    <string name="menu_title_bottom_nav_downloaded">Terdownload</string>
+
 
     <!-- Content Description layout xml -->
     <string name="content_description_fab_add_story">Story Baru</string>
@@ -48,6 +50,7 @@
     <string name="button_text_signin">Masuk</string>
     <string name="button_text_signup">Daftar</string>
     <string name="button_text_logout">Keluar</string>
+    <string name="button_text_download">Unduh Story</string>
 
     <!-- API Error & Response Code -->
     <string name="API_success_upload_image">Yeay 😘, Gambar berhasil diupload</string>

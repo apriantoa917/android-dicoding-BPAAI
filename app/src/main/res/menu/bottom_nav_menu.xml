@@ -21,9 +21,9 @@
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/navigation_now"
-        android:icon="@drawable/ic_baseline_person_24"
-        android:title="@string/menu_title_bottom_nav_profile"
+        android:id="@+id/navigation_downloaded"
+        android:icon="@drawable/ic_baseline_folder_24"
+        android:title="@string/menu_title_bottom_nav_downloaded"
         app:showAsAction="always" />
 
     <item

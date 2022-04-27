@@ -16,7 +16,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.aprianto.dicostory.R
 import com.aprianto.dicostory.data.viewmodel.StoryViewModel
-import com.aprianto.dicostory.data.viewmodel.ViewModelGeneralFactory
 import com.aprianto.dicostory.databinding.ActivityNewStoryPickLocationBinding
 import com.aprianto.dicostory.databinding.CustomTooltipPickLocationStoryBinding
 import com.aprianto.dicostory.utils.Constanta
@@ -37,9 +36,7 @@ class NewStoryPickLocation : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityNewStoryPickLocationBinding
-    val viewModel: StoryViewModel by viewModels {
-        ViewModelGeneralFactory(this)
-    }
+    val viewModel: StoryViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +55,7 @@ class NewStoryPickLocation : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
             if (viewModel.isLocationPicked.value == true) {
                 val intent = Intent()
                 intent.putExtra(
-                    Constanta.LocationPicker.isPicked.name,
+                    Constanta.LocationPicker.IsPicked.name,
                     viewModel.isLocationPicked.value
                 )
                 intent.putExtra(
@@ -86,18 +83,11 @@ class NewStoryPickLocation : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         setMapStyle()
+        mMap.uiSettings.isMyLocationButtonEnabled = true
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(Constanta.indonesiaLocation, 4f))
         mMap.setInfoWindowAdapter(this)
         mMap.setOnInfoWindowClickListener { marker ->
-            val address =
-                Helper.getStoryLocation(
-                    this,
-                    marker.position.latitude,
-                    marker.position.longitude
-                )
-            binding.addressBar.text = address
-            viewModel.isLocationPicked.postValue(true)
-            viewModel.coordinateLatitude.postValue(marker.position.latitude)
-            viewModel.coordinateLongitude.postValue(marker.position.longitude)
+            postLocationSelected(marker.position.latitude, marker.position.longitude)
             marker.hideInfoWindow()
         }
         mMap.setOnMapClickListener {
@@ -125,7 +115,21 @@ class NewStoryPickLocation : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
                     )
             )?.showInfoWindow()
         }
+
         getMyLastLocation()
+    }
+
+    private fun postLocationSelected(lat: Double, lon: Double) {
+        val address =
+            Helper.getStoryLocation(
+                this,
+                lat,
+                lon
+            )
+        binding.addressBar.text = address
+        viewModel.isLocationPicked.postValue(true)
+        viewModel.coordinateLatitude.postValue(lat)
+        viewModel.coordinateLongitude.postValue(lon)
     }
 
     private fun setMapStyle() {
@@ -185,15 +189,16 @@ class NewStoryPickLocation : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
                                     location.longitude
                                 )
                             )
-                    )?.showInfoWindow()
-                    mMap.moveCamera(
+                    )
+                    mMap.animateCamera(
                         CameraUpdateFactory.newLatLngZoom(
                             LatLng(
                                 location.latitude,
                                 location.longitude
-                            ), 15f
+                            ), 20f
                         )
                     )
+                    postLocationSelected(location.latitude, location.longitude)
                 }
             }
         } else {

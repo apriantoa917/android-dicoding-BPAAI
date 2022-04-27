@@ -72,12 +72,7 @@ class ProfileFragment : Fragment() {
             )
         }
         binding.btnSetPermission.setOnClickListener {
-            val intent = Intent()
-            intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-            val uri: Uri =
-                Uri.fromParts("package", (activity as MainActivity).packageName, null)
-            intent.data = uri
-            (activity as MainActivity).startActivity(intent)
+            Helper.openSettingPermission(requireContext())
         }
         binding.btnSetLanguage.setOnClickListener {
             startActivity(Intent(Settings.ACTION_LOCALE_SETTINGS))

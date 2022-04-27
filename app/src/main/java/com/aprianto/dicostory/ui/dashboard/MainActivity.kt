@@ -1,51 +1,183 @@
 package com.aprianto.dicostory.ui.dashboard
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
-import android.view.Gravity
+import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.aprianto.dicostory.R
+import com.aprianto.dicostory.data.repository.remote.ApiConfig
+import com.aprianto.dicostory.data.viewmodel.*
 import com.aprianto.dicostory.databinding.ActivityMainBinding
 import com.aprianto.dicostory.ui.auth.AuthActivity
+import com.aprianto.dicostory.ui.dashboard.folder.FolderFragment
 import com.aprianto.dicostory.ui.dashboard.explore.ExploreFragment
 import com.aprianto.dicostory.ui.dashboard.home.HomeFragment
 import com.aprianto.dicostory.ui.dashboard.profile.ProfileFragment
 import com.aprianto.dicostory.ui.dashboard.story.CameraActivity
+import com.aprianto.dicostory.utils.Constanta
 import com.aprianto.dicostory.utils.Helper
+import com.aprianto.dicostory.utils.SettingPreferences
+import com.aprianto.dicostory.utils.dataStore
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 @Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity() {
 
+    /* load image in folderFragments */
+    private val folderViewModel: FolderViewModel by viewModels()
     private lateinit var binding: ActivityMainBinding
-    private val fragmentProfile = ProfileFragment()
-    private val fragmentHome = HomeFragment()
-    private val fragmentExplore = ExploreFragment()
+    private val pref = SettingPreferences.getInstance(dataStore)
+    private val settingViewModel: SettingViewModel by viewModels { ViewModelSettingFactory(pref) }
+    private var token = ""
 
+    @RequiresApi(Build.VERSION_CODES.M)
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.bottomNavigationView.background = null // hide abnormal layer in bottom nav
 
-        switchFragment(fragmentHome)
+
+        val fragmentProfile = ProfileFragment()
+        val fragmentHome = HomeFragment()
+        val fragmentExplore = ExploreFragment()
+        val fragmentDownloaded = FolderFragment()
+
+
+        /* obtain token for reuse in child fragments */
+        settingViewModel.getUserPreferences(Constanta.UserPreferences.UserToken.name)
+            .observe(this) {
+                token = "Bearer $it"
+                /* start load data after token obtained */
+                switchFragment(fragmentHome)
+            }
+
+        binding.bottomNavigationView.background = null // hide abnormal layer in bottom nav
 
         binding.bottomNavigationView.setOnNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.navigation_home -> switchFragment(fragmentHome)
-                R.id.navigation_profile -> switchFragment(fragmentProfile)
-                R.id.navigation_explore -> switchFragment(fragmentExplore)
+                R.id.navigation_home -> {
+                    switchFragment(fragmentHome)
+                    true
+                }
+                R.id.navigation_explore -> {
+                    if (Helper.isPermissionGranted(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    ) {
+                        switchFragment(fragmentExplore)
+                        true
+                    } else {
+                        ActivityCompat.requestPermissions(
+                            this@MainActivity,
+                            arrayOf(
+                                Manifest.permission.ACCESS_FINE_LOCATION,
+                                Manifest.permission.ACCESS_COARSE_LOCATION
+                            ),
+                            Constanta.LOCATION_PERMISSION_CODE
+                        )
+                        false
+                    }
+                }
+                R.id.navigation_downloaded -> {
+                    if (Helper.isPermissionGranted(
+                            this,
+                            Manifest.permission.READ_EXTERNAL_STORAGE
+                        )
+                    ) {
+                        switchFragment(fragmentDownloaded)
+                        true
+                    } else {
+                        ActivityCompat.requestPermissions(
+                            this@MainActivity,
+                            arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                            Constanta.STORAGE_PERMISSION_CODE
+                        )
+                        false
+                    }
+                }
+                R.id.navigation_profile -> {
+                    switchFragment(fragmentProfile)
+                    true
+                }
+                else -> false
             }
-            true
+
         }
         binding.fab.setOnClickListener {
-            routeToStory()
+            /* ask permission for camera first before launch camera */
+            if (Helper.isPermissionGranted(this, Manifest.permission.CAMERA)) {
+                startActivity(Intent(this, CameraActivity::class.java))
+            } else {
+                ActivityCompat.requestPermissions(
+                    this@MainActivity,
+                    arrayOf(Manifest.permission.CAMERA),
+                    Constanta.CAMERA_PERMISSION_CODE
+                )
+
+            }
         }
+
+    }
+
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+
+        when (requestCode) {
+            Constanta.CAMERA_PERMISSION_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    Helper.notifyGivePermission(this, "Berikan aplikasi izin mengakses kamera  ")
+                }
+            }
+            Constanta.LOCATION_PERMISSION_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    Helper.notifyGivePermission(
+                        this,
+                        "Berikan aplikasi izin lokasi untuk membaca lokasi  "
+                    )
+                }
+            }
+            Constanta.STORAGE_PERMISSION_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    Helper.notifyGivePermission(
+                        this,
+                        "Berikan aplikasi izin storage untuk membaca dan menyimpan story"
+                    )
+                }
+            }
+            else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        /* after return from other activity, reinitialize folder data (after download story i.e)*/
+        loadFolderData()
+    }
+
+    /* return current token from dataPreference to child fragment */
+    fun getUserToken() = token
+
+    fun getStoryViewModel(): StoryPagerViewModel {
+        val viewModel: StoryPagerViewModel by viewModels {
+            ViewModelStoryFactory(
+                this,
+                ApiConfig.getApiService(),
+                getUserToken()
+            )
+        }
+        return viewModel
     }
 
 
@@ -56,20 +188,14 @@ class MainActivity : AppCompatActivity() {
             .commit()
     }
 
-    private fun routeToStory() {
-        if (!allPermissionsGranted()) {
-            requestPermission()
-        } else {
-            startActivity(Intent(this, CameraActivity::class.java))
-        }
-    }
 
-    private fun requestPermission() {
-        ActivityCompat.requestPermissions(
-            this,
-            REQUIRED_PERMISSIONS,
-            REQUEST_CODE_PERMISSIONS
-        )
+    @OptIn(DelicateCoroutinesApi::class)
+    private fun loadFolderData() {
+        /* init load folder async */
+        GlobalScope.launch {
+            /* load thumbnail image for folder fragment while app opened */
+            folderViewModel.loadImage(this@MainActivity)
+        }
     }
 
     fun routeToAuth() = startActivity(Intent(this, AuthActivity::class.java))
@@ -79,30 +205,5 @@ class MainActivity : AppCompatActivity() {
         finishAffinity()
     }
 
-    @SuppressLint("RtlHardcoded")
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_CODE_PERMISSIONS) {
-            if (!allPermissionsGranted()) {
-                Helper.showDialogInfo(
-                    this,
-                    getString(R.string.UI_error_permission_denied),
-                    Gravity.LEFT
-                )
-            }
-        }
-    }
 
-    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
-        ContextCompat.checkSelfPermission(baseContext, it) == PackageManager.PERMISSION_GRANTED
-    }
-
-    companion object {
-        private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
-        private const val REQUEST_CODE_PERMISSIONS = 10
-    }
 }

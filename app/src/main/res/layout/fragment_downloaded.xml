@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.dashboard.folder.FolderFragment">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp">
+
+                <TextView
+                    android:id="@+id/label_story"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="History Story"
+                    android:textColor="@color/dicoding_secondary_700"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/btn_info_story"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentEnd="true"
+                    android:paddingVertical="5dp"
+                    android:src="@drawable/ic_baseline_info_24"
+                    app:tint="@color/dicoding_secondary_700" />
+            </RelativeLayout>
+
+            <ProgressBar
+                android:id="@+id/loading_story"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp" />
+
+            <TextView
+                android:id="@+id/null_story"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:gravity="center"
+                android:text="- tidak ada data -"
+                android:textSize="16sp" />
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_story"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:paddingHorizontal="8dp"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="2"
+                tools:itemCount="3"
+                tools:listitem="@layout/rv_folder" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp">
+
+                <TextView
+                    android:id="@+id/label_download"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="Hasil Download"
+                    android:textColor="@color/dicoding_secondary_700"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+
+                <ImageView
+                    android:id="@+id/btn_info_download"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentEnd="true"
+                    android:paddingVertical="5dp"
+                    android:src="@drawable/ic_baseline_info_24"
+                    app:tint="@color/dicoding_secondary_700" />
+            </RelativeLayout>
+
+            <ProgressBar
+                android:id="@+id/loading_download"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp" />
+
+            <TextView
+                android:id="@+id/null_download"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:gravity="center"
+                android:text="- tidak ada data -"
+                android:textSize="16sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_download"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="100dp"
+                android:nestedScrollingEnabled="false"
+                android:paddingHorizontal="8dp"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="2"
+                tools:itemCount="3"
+                tools:listitem="@layout/rv_folder" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.core.widget.NestedScrollView>
+
+</FrameLayout>

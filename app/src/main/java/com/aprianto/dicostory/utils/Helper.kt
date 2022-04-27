@@ -4,25 +4,30 @@ package com.aprianto.dicostory.utils
 import android.annotation.SuppressLint
 import android.app.Application
 import android.app.Dialog
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.content.ContentResolver
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Color
-import android.graphics.Matrix
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.*
 import android.graphics.drawable.ColorDrawable
 import android.location.Geocoder
 import android.net.Uri
 import android.os.Environment
+import android.provider.Settings
+import android.util.Log
 import android.view.Gravity
 import android.view.WindowManager
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.aprianto.dicostory.R
+import com.aprianto.dicostory.ui.widget.RecentStoryWidget
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import java.io.*
-import java.lang.StringBuilder
 import java.net.HttpURLConnection
 import java.net.URL
 import java.text.ParseException
@@ -32,6 +37,33 @@ import java.util.*
 
 object Helper {
 
+    /*
+    * PERMISSION
+    * */
+
+    fun notifyGivePermission(context: Context, message: String) {
+        val dialog = Helper.dialogInfoBuilder(context, message)
+        val button = dialog.findViewById<Button>(R.id.button_ok)
+        button.setOnClickListener {
+            dialog.dismiss()
+            openSettingPermission(context)
+        }
+        dialog.setCancelable(false)
+        dialog.show()
+    }
+
+    fun isPermissionGranted(context: Context, permission: String) =
+        ContextCompat.checkSelfPermission(
+            context,
+            permission
+        ) == PackageManager.PERMISSION_GRANTED
+
+    fun openSettingPermission(context: Context) {
+        val intent = Intent()
+        intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+        intent.data = Uri.fromParts("package", context.packageName, null)
+        context.startActivity(intent)
+    }
 
     /*
     *  DATE FORMAT
@@ -57,7 +89,7 @@ object Helper {
 
     @SuppressLint("ConstantLocale")
     val currentTimestamp: String = SimpleDateFormat(
-        "ddMMyySSSSS",
+        "ddMMyyHHmmssSS",
         Locale.getDefault()
     ).format(System.currentTimeMillis())
 
@@ -106,9 +138,9 @@ object Helper {
         return getSimpleDate(date)
     }
 
-    /*
-    * UI CONTROLLER
-    * */
+/*
+* UI CONTROLLER
+* */
 
     // custom dialog info builder -> reuse to another invocation with custom ok button action
     fun dialogInfoBuilder(
@@ -151,9 +183,36 @@ object Helper {
         dialog.show()
     }
 
-    /*
-    * CAMERA INSTANCE HELPER
-    * */
+    fun showDialogPreviewImage(
+        context: Context,
+        image: Bitmap,
+        path: String
+    ) {
+        val dialog = Dialog(context)
+        dialog.setCancelable(true)
+        dialog.window!!.apply {
+            val params: WindowManager.LayoutParams = this.attributes
+            params.width = WindowManager.LayoutParams.WRAP_CONTENT
+            params.height = WindowManager.LayoutParams.WRAP_CONTENT
+            attributes.windowAnimations = android.R.transition.slide_bottom
+            setGravity(Gravity.CENTER)
+            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        }
+        dialog.setContentView(R.layout.custom_dialog_preview_image)
+        val tvPath = dialog.findViewById<TextView>(R.id.image_path)
+        tvPath.text = path
+        val imageContainer = dialog.findViewById<ImageView>(R.id.image_preview)
+        imageContainer.setImageBitmap(image)
+        val btnClose = dialog.findViewById<ImageView>(R.id.btn_close_preview)
+        btnClose.setOnClickListener {
+            dialog.dismiss()
+        }
+        dialog.show()
+    }
+
+/*
+* CAMERA INSTANCE HELPER
+* */
 
     private fun createCustomTempFile(context: Context): File {
         val storageDir: File? = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
@@ -173,15 +232,28 @@ object Helper {
         return myFile
     }
 
-    fun createFile(application: Application): File {
+    private fun getRandomString(len: Int): String {
+        val alphabet: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
+        return List(len) { alphabet.random() }.joinToString("")
+    }
+
+    fun getDefaultFileName(): String {
+        return "STORY-${getRandomString(20)}.jpg"
+    }
+
+    fun createFile(
+        application: Application,
+        folder: String = "story",
+        filename: String = getDefaultFileName()
+    ): File {
         val mediaDir = application.externalMediaDirs.firstOrNull()?.let {
-            File(it, "story").apply { mkdirs() }
+            File(it, folder).apply { mkdirs() }
         }
         val outputDirectory = if (
             mediaDir != null && mediaDir.exists()
         ) mediaDir else application.filesDir
 
-        return File(outputDirectory, "STORY-$currentTimestamp.jpg")
+        return File(outputDirectory, filename)
     }
 
     fun rotateBitmap(bitmap: Bitmap, isBackCamera: Boolean = false): Bitmap {
@@ -211,7 +283,20 @@ object Helper {
             )
         }
     }
-    /* BITMAP from URL*/
+
+    fun compressBitmap(bitmap: Bitmap, width: Int, height: Int): Bitmap {
+        val matrix = Matrix()
+        matrix.setRectToRect(
+            RectF(0F, 0F, bitmap.width.toFloat(), bitmap.height.toFloat()),
+            RectF(0F, 0F, width.toFloat(), height.toFloat()),
+            Matrix.ScaleToFit.CENTER
+        )
+        val scaledBitmap: Bitmap =
+            Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+        bitmap.recycle()
+        return scaledBitmap
+    }
+/* BITMAP from URL*/
 
     fun bitmapFromURL(context: Context, urlString: String): Bitmap {
         return try {
@@ -228,10 +313,6 @@ object Helper {
 
     fun bitmapDescriptor(bitmap: Bitmap): BitmapDescriptor {
         return BitmapDescriptorFactory.fromBitmap(bitmap)
-    }
-
-    fun getStoryMapPreview(context: Context, url: String): BitmapDescriptor {
-        return bitmapDescriptor(getResizedBitmap(bitmapFromURL(context, url), 150, 150))
     }
 
     fun getResizedBitmap(bm: Bitmap, newWidth: Int, newHeight: Int): Bitmap {
@@ -253,7 +334,7 @@ object Helper {
         return resizedBitmap
     }
 
-    /* GET LOCATION INFO */
+/* GET LOCATION INFO */
 
     fun getStoryLocation(
         context: Context,
@@ -271,6 +352,25 @@ object Helper {
         } else {
             "📌 Location Unknown"
         }
+    }
+
+    fun loadImageFromStorage(path: String): Bitmap? {
+        val imgFile = File(path)
+        return if (imgFile.exists()) {
+            BitmapFactory.decodeFile(imgFile.absolutePath)
+        } else null
+    }
+
+    /* WIDGET */
+
+    fun updateWidgetData(context: Context) {
+        Log.i("TEST_WIDGET", "Requested update data")
+        val appWidgetManager = AppWidgetManager.getInstance(context)
+        val ids: IntArray = appWidgetManager.getAppWidgetIds(
+            ComponentName(context, RecentStoryWidget::class.java)
+        )
+        /* if widget update requested -> request load new data */
+        appWidgetManager.notifyAppWidgetViewDataChanged(ids, R.id.stack_view)
     }
 
 }
