@@ -1,7 +1,6 @@
 package com.aprianto.dicostory.ui.dashboard.profile
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.view.Gravity
@@ -54,7 +53,9 @@ class ProfileFragment : Fragment() {
         settingViewModel.getUserPreferences(Constanta.UserPreferences.UserLastLogin.name)
             .observe(viewLifecycleOwner) {
                 binding.textLastLogin.text =
-                    StringBuilder("Login pada ").append(Helper.getSimpleDateString(it))
+                    StringBuilder(getString(R.string.const_text_login_on))
+                        .append(" ")
+                        .append(Helper.getSimpleDateString(it))
             }
         settingViewModel.getUserPreferences(Constanta.UserPreferences.UserToken.name)
             .observe(viewLifecycleOwner) {
@@ -72,12 +73,7 @@ class ProfileFragment : Fragment() {
             )
         }
         binding.btnSetPermission.setOnClickListener {
-            val intent = Intent()
-            intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-            val uri: Uri =
-                Uri.fromParts("package", (activity as MainActivity).packageName, null)
-            intent.data = uri
-            (activity as MainActivity).startActivity(intent)
+            Helper.openSettingPermission(requireContext())
         }
         binding.btnSetLanguage.setOnClickListener {
             startActivity(Intent(Settings.ACTION_LOCALE_SETTINGS))

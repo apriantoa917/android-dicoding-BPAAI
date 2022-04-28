@@ -23,7 +23,7 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="3dp"
-        android:background="@color/light_gray"
+        android:background="@color/light_gray_200"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
@@ -36,52 +36,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider">
 
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/nestedScrollView"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_story"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fillViewport="true">
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_story"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false"
-                    android:paddingHorizontal="16dp"
-                    android:paddingTop="16dp"
-                    tools:itemCount="3"
-                    tools:listitem="@layout/rv_story" />
-
-                <ImageView
-                    android:id="@+id/btn_jump_up"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginBottom="200dp"
-                    android:contentDescription="@string/content_description_btn_jump_up"
-                    android:src="@drawable/ic_button_jump_up" />
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-        </androidx.core.widget.NestedScrollView>
+            android:nestedScrollingEnabled="false"
+            android:paddingHorizontal="16dp"
+            tools:itemCount="3"
+            tools:listitem="@layout/rv_story" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-    <include
-        android:id="@+id/loading"
-        layout="@layout/custom_loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

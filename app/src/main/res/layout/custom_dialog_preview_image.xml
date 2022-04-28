@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/custom_loading_container"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/btn_close_preview"
+        android:layout_alignBottom="@+id/btn_close_preview"
+        android:gravity="center_vertical"
+        android:text="@string/const_text_preview_image"
+        android:textColor="@color/dicoding_secondary_500"
+        android:textSize="26sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/btn_close_preview"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/custom_form_input"
+        android:backgroundTint="@color/dicoding_secondary_500"
+        android:padding="8dp"
+        android:src="@drawable/ic_baseline_clear_24"
+        app:tint="@color/white"
+        android:contentDescription="@string/content_description_btn_close_dialog" />
+
+    <ImageView
+        android:id="@+id/image_preview"
+        android:layout_width="400dp"
+        android:layout_height="300dp"
+        android:layout_below="@id/btn_close_preview"
+        android:layout_marginTop="16dp"
+        android:background="@color/light_gray_200"
+        tools:srcCompat="@tools:sample/avatars"
+        android:contentDescription="@string/content_description_image_story" />
+
+    <TextView
+        android:id="@+id/label_path"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/image_preview"
+        android:layout_marginTop="16dp"
+        android:text="@string/const_text_storage_location"
+        android:textColor="@color/dicoding_secondary_500"
+        android:textStyle="bold"
+        android:textSize="16sp" />
+    <TextView
+        android:id="@+id/image_path"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/label_path"
+        android:layout_marginTop="16dp"
+        android:text="@string/const_lorem_ipsum"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
+
+</RelativeLayout>

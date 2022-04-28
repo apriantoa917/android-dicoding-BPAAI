@@ -3,9 +3,12 @@ package com.aprianto.dicostory.ui.dashboard.home
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.app.ActivityOptionsCompat
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.aprianto.dicostory.R
 import com.aprianto.dicostory.data.model.Story
@@ -15,31 +18,27 @@ import com.aprianto.dicostory.utils.Constanta
 import com.aprianto.dicostory.utils.Helper
 import com.bumptech.glide.Glide
 
+class StoryAdapter : PagingDataAdapter<Story, StoryAdapter.ViewHolder>(DIFF_CALLBACK) {
 
-class HomeAdapter :
-    RecyclerView.Adapter<HomeAdapter.ViewHolder>() {
-
-    private var data = mutableListOf<Story>()
-
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): ViewHolder {
-        val binding =
-            RvStoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val binding = RvStoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
-    override fun getItemCount(): Int = data.size
-
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val story = data[position]
-        holder.bind(story)
+        getItem(position)?.let { holder.bind(it) }
     }
 
-    fun initData(story: List<Story>) {
-        data.clear()
-        data = story.toMutableList()
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Story>() {
+            override fun areItemsTheSame(oldItem: Story, newItem: Story): Boolean {
+                return oldItem == newItem
+            }
+
+            override fun areContentsTheSame(oldItem: Story, newItem: Story): Boolean {
+                return oldItem.id == newItem.id
+            }
+        }
     }
 
     inner class ViewHolder(private val binding: RvStoryBinding) :
@@ -62,6 +61,13 @@ class HomeAdapter :
                     val intent = Intent(itemView.context, DetailActivity::class.java)
                     intent.putExtra(Constanta.StoryDetail.UserName.name, story.name)
                     intent.putExtra(Constanta.StoryDetail.ImageURL.name, story.photoUrl)
+                    try {
+                        intent.putExtra(Constanta.StoryDetail.Latitude.name, story.lat.toString())
+                        intent.putExtra(Constanta.StoryDetail.Longitude.name, story.lon.toString())
+                    } catch (e: Exception) {
+                        /* if story don't have location (lat, lon is null) -> skip put extra*/
+                        Log.e(Constanta.TAG_STORY, e.toString())
+                    }
                     intent.putExtra(
                         Constanta.StoryDetail.ContentDescription.name,
                         story.description
@@ -84,7 +90,7 @@ class HomeAdapter :
                     val optionsCompat: ActivityOptionsCompat =
                         ActivityOptionsCompat.makeSceneTransitionAnimation(
                             itemView.context as Activity,
-                            /* transition between recyclerview & acitvity detail */
+                            /* transition between recyclerview & activity detail */
                             androidx.core.util.Pair(storyImage, "story_image"),
                             androidx.core.util.Pair(storyName, "user_name"),
                             androidx.core.util.Pair(defaultAvatar, "user_avatar"),
@@ -94,5 +100,4 @@ class HomeAdapter :
             }
         }
     }
-
 }

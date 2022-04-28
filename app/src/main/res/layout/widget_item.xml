@@ -10,6 +10,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
+        android:background="@drawable/custom_story_desc"
+        android:padding="6dp"
         android:scaleType="fitCenter"
-        tools:srcCompat="@tools:sample/avatars" />
+        tools:srcCompat="@tools:sample/avatars"
+        android:contentDescription="@string/content_description_image_story" />
 </LinearLayout>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:layout_gravity="center"
+    android:background="@drawable/custom_loading_container"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/label_header"
+        android:layout_width="268dp"
+        android:layout_height="25dp"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="50"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:scrollHorizontally="true"
+        android:text="@string/const_text_select_location"
+        android:textColor="@color/dicoding_secondary_700"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/ic_baseline_pin_drop_24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/label_header"
+        app:tint="@color/dicoding_secondary_500"
+        android:contentDescription="@string/content_description_icon_maps" />
+
+    <TextView
+        android:id="@+id/location"
+        android:layout_width="248dp"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:lineHeight="20dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="0dp"
+        android:text="@string/const_lorem_ipsum"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageView2"
+        app:layout_constraintTop_toTopOf="@+id/imageView2"
+        tools:ignore="UnusedAttribute" />
+
+    <TextView
+        android:id="@+id/label_info"
+        android:layout_width="268dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:lineHeight="20dp"
+        android:text="@string/const_text_tooltip_pin_location"
+        android:textColor="@color/gray"
+        android:textSize="12sp"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/location"
+        tools:ignore="UnusedAttribute" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

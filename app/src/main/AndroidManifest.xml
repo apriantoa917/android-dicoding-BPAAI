@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.aprianto.dicostory">
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-feature android:name="android.hardware.camera.any" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera.any" />
 
     <application
         android:allowBackup="true"
@@ -13,9 +20,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DicoStory">
-        <activity
-            android:name=".ui.dashboard.profile.WebViewActivity"
-            android:exported="false" />
+
+        <!-- Google Maps API -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCqhkk664pEaOlRGVI1jcnb8dSOmS_OVaw" />
+
+        <!-- widget story-->
+        <service
+            android:name=".ui.widget.RecentStoryService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
 
         <receiver
             android:name=".ui.widget.RecentStoryWidget"
@@ -29,26 +43,23 @@
                 android:resource="@xml/recent_story_widget_info" />
         </receiver>
 
-        <service
-            android:name=".ui.widget.RecentStoryService"
-            android:permission="android.permission.BIND_REMOTEVIEWS" />
-
+        <!-- Activity -->
         <activity
-            android:name=".ui.dashboard.story.NewStoryActivity"
-            android:exported="false" />
-        <activity android:name=".ui.dashboard.story.CameraActivity" />
-        <activity android:name=".ui.detail.DetailActivity" />
-        <activity android:name=".ui.splashscreen.SplashScreenActivity">
+            android:name=".ui.splashscreen.SplashScreenActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.dashboard.story.NewStoryPickLocation" />
+        <activity android:name=".ui.dashboard.profile.WebViewActivity" />
+        <activity android:name=".ui.dashboard.story.NewStoryActivity" />
+        <activity android:name=".ui.dashboard.story.CameraActivity" />
+        <activity android:name=".ui.dashboard.MainActivity" />
+        <activity android:name=".ui.detail.DetailActivity" />
         <activity android:name=".ui.auth.AuthActivity" />
-        <activity
-            android:name=".ui.dashboard.MainActivity"
-            android:label="@string/app_name" />
+
     </application>
 
 </manifest>

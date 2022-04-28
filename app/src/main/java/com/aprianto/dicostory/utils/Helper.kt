@@ -4,23 +4,34 @@ package com.aprianto.dicostory.utils
 import android.annotation.SuppressLint
 import android.app.Application
 import android.app.Dialog
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.content.ContentResolver
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.drawable.ColorDrawable
+import android.location.Geocoder
 import android.net.Uri
 import android.os.Environment
+import android.os.StrictMode
+import android.provider.Settings
+import android.util.Log
 import android.view.Gravity
 import android.view.WindowManager
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.aprianto.dicostory.R
-import java.io.File
-import java.io.FileOutputStream
-import java.io.InputStream
-import java.io.OutputStream
+import com.aprianto.dicostory.ui.widget.RecentStoryWidget
+import java.io.*
+import java.net.HttpURLConnection
+import java.net.URL
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -28,10 +39,37 @@ import java.util.*
 
 object Helper {
 
+    /* -------------------------
+    * PERMISSION
+    * ------------------------- */
 
-    /*
+    fun notifyGivePermission(context: Context, message: String) {
+        val dialog = dialogInfoBuilder(context, message)
+        val button = dialog.findViewById<Button>(R.id.button_ok)
+        button.setOnClickListener {
+            dialog.dismiss()
+            openSettingPermission(context)
+        }
+        dialog.setCancelable(false)
+        dialog.show()
+    }
+
+    fun isPermissionGranted(context: Context, permission: String) =
+        ContextCompat.checkSelfPermission(
+            context,
+            permission
+        ) == PackageManager.PERMISSION_GRANTED
+
+    fun openSettingPermission(context: Context) {
+        val intent = Intent()
+        intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+        intent.data = Uri.fromParts("package", context.packageName, null)
+        context.startActivity(intent)
+    }
+
+    /* -------------------------
     *  DATE FORMAT
-    * */
+    * ------------------------- */
     private const val timestampFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
     private const val simpleDateFormat = "dd MMM yyyy HH.mm"
 
@@ -43,33 +81,32 @@ object Helper {
     @SuppressLint("ConstantLocale")
     val simpleDate = SimpleDateFormat(simpleDateFormat, Locale.getDefault())
 
-    // curent date in date
+    /* curent date in date */
     private fun getCurrentDate(): Date {
         return Date()
     }
 
-    // curent date in string
+    /* curent date in string */
     fun getCurrentDateString(): String = defaultDate.format(getCurrentDate())
 
     @SuppressLint("ConstantLocale")
     val currentTimestamp: String = SimpleDateFormat(
-        "ddMMyySSSSS",
+        "ddMMyyHHmmssSS",
         Locale.getDefault()
     ).format(System.currentTimeMillis())
 
-    // string simpleDate (unformatted) to date
+    /* string simpleDate (unformatted) to date */
     private fun parseSimpleDate(dateValue: String): Date {
         return defaultDate.parse(dateValue) as Date
     }
 
-    // simpleDate (Date) to string
+    /* simpleDate (Date) to string */
     private fun getSimpleDate(date: Date): String = simpleDate.format(date)
 
-    // string to string
+    /* string to string */
     fun getSimpleDateString(dateValue: String): String = getSimpleDate(parseSimpleDate(dateValue))
 
-
-    // string UTC format to date
+    /* string UTC format to date */
     private fun parseUTCDate(timestamp: String): Date {
         return try {
             val formatter = SimpleDateFormat(timestampFormat, Locale.getDefault())
@@ -80,6 +117,7 @@ object Helper {
         }
     }
 
+    /* get expected upload time, ie : uploaded 2 mins ago */
     fun getTimelineUpload(context: Context, timestamp: String): String {
         val currentTime = getCurrentDate()
         val uploadTime = parseUTCDate(timestamp)
@@ -97,16 +135,18 @@ object Helper {
         return label
     }
 
+    /* get readable date of uploaded story, ie : 30 April 2022 00.00 */
     fun getUploadStoryTime(timestamp: String): String {
         val date: Date = parseUTCDate(timestamp)
         return getSimpleDate(date)
     }
 
-    /*
-    * UI CONTROLLER
-    * */
 
-    // custom dialog info builder -> reuse to another invocation with custom ok button action
+    /* -------------------------
+    *  CUSTOM DIALOG
+    * ------------------------- */
+
+    /* custom dialog info builder -> reuse to another invocation with custom ok button action */
     fun dialogInfoBuilder(
         context: Context,
         message: String,
@@ -133,7 +173,7 @@ object Helper {
         return dialog
     }
 
-    // ready use to go dialog with related params
+    /* ready use to go dialog with related params */
     fun showDialogInfo(
         context: Context,
         message: String,
@@ -147,9 +187,37 @@ object Helper {
         dialog.show()
     }
 
-    /*
-    * CAMERA INSTANCE HELPER
-    * */
+    /* show preview image in folder fragments */
+    fun showDialogPreviewImage(
+        context: Context,
+        image: Bitmap,
+        path: String
+    ) {
+        val dialog = Dialog(context)
+        dialog.setCancelable(true)
+        dialog.window!!.apply {
+            val params: WindowManager.LayoutParams = this.attributes
+            params.width = WindowManager.LayoutParams.WRAP_CONTENT
+            params.height = WindowManager.LayoutParams.WRAP_CONTENT
+            attributes.windowAnimations = android.R.transition.slide_bottom
+            setGravity(Gravity.CENTER)
+            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        }
+        dialog.setContentView(R.layout.custom_dialog_preview_image)
+        val tvPath = dialog.findViewById<TextView>(R.id.image_path)
+        tvPath.text = path
+        val imageContainer = dialog.findViewById<ImageView>(R.id.image_preview)
+        imageContainer.setImageBitmap(image)
+        val btnClose = dialog.findViewById<ImageView>(R.id.btn_close_preview)
+        btnClose.setOnClickListener {
+            dialog.dismiss()
+        }
+        dialog.show()
+    }
+
+    /* -------------------------
+    * FILE HELPER & BITMAP
+    * ------------------------- */
 
     private fun createCustomTempFile(context: Context): File {
         val storageDir: File? = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
@@ -169,15 +237,72 @@ object Helper {
         return myFile
     }
 
-    fun createFile(application: Application): File {
+    private fun getRandomString(len: Int = 20): String {
+        val alphabet: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
+        return List(len) { alphabet.random() }.joinToString("")
+    }
+
+    /* get default exported file name */
+    fun getDefaultFileName(): String {
+        return "STORY-${getRandomString()}.jpg"
+    }
+
+    /* create export file (story / download) to exact path location */
+    fun createFile(
+        application: Application,
+        folder: String = "story",
+        filename: String = getDefaultFileName()
+    ): File {
         val mediaDir = application.externalMediaDirs.firstOrNull()?.let {
-            File(it, "story").apply { mkdirs() }
+            File(it, folder).apply { mkdirs() }
         }
         val outputDirectory = if (
             mediaDir != null && mediaDir.exists()
         ) mediaDir else application.filesDir
+        return File(outputDirectory, filename)
+    }
 
-        return File(outputDirectory, "STORY-$currentTimestamp.jpg")
+    /* load bitmap from exact path location */
+    fun loadImageFromStorage(path: String): Bitmap? {
+        val imgFile = File(path)
+        return if (imgFile.exists()) {
+            BitmapFactory.decodeFile(imgFile.absolutePath)
+        } else null
+    }
+
+    /* load BITMAP from string URL */
+    fun bitmapFromURL(context: Context, urlString: String): Bitmap {
+        return try {
+            /* allow access content from URL internet */
+            val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
+            StrictMode.setThreadPolicy(policy)
+
+            /* fetch image data from URL */
+            val url = URL(urlString)
+            val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
+            connection.doInput = true
+            connection.connect()
+            val input: InputStream = connection.inputStream
+            BitmapFactory.decodeStream(input)
+        } catch (e: IOException) {
+            BitmapFactory.decodeResource(context.resources, R.drawable.bot)
+        }
+    }
+
+    fun resizeBitmap(bm: Bitmap, newWidth: Int, newHeight: Int): Bitmap {
+        val width = bm.width
+        val height = bm.height
+        val scaleWidth = newWidth.toFloat() / width
+        val scaleHeight = newHeight.toFloat() / height
+
+        /* init matrix to resize bitmap */
+        val matrix = Matrix()
+        matrix.postScale(scaleWidth, scaleHeight)
+
+        /* recreate new bitmap as new defined size */
+        val resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false)
+        bm.recycle()
+        return resizedBitmap
     }
 
     fun rotateBitmap(bitmap: Bitmap, isBackCamera: Boolean = false): Bitmap {
@@ -207,4 +332,43 @@ object Helper {
             )
         }
     }
+
+    /* -------------------------
+    * GEOLOCATION & GEOCODER
+    * ------------------------- */
+
+    /* parse lat lon coordinate into readable address */
+    fun parseAddressLocation(
+        context: Context,
+        lat: Double,
+        lon: Double
+    ): String {
+        val geocoder = Geocoder(context)
+        val geoLocation =
+            geocoder.getFromLocation(lat, lon, 1)
+        return if (geoLocation.size > 0) {
+            val location = geoLocation[0]
+            val fullAddress = location.getAddressLine(0)
+            StringBuilder("📌 ")
+                .append(fullAddress).toString()
+        } else {
+            "📌 Location Unknown"
+        }
+    }
+
+
+    /* -------------------------
+    * WIDGET
+    * ------------------------- */
+
+    fun updateWidgetData(context: Context) {
+        Log.i("TEST_WIDGET", "Requested update data")
+        val appWidgetManager = AppWidgetManager.getInstance(context)
+        val ids: IntArray = appWidgetManager.getAppWidgetIds(
+            ComponentName(context, RecentStoryWidget::class.java)
+        )
+        /* if widget update requested -> refresh widget data */
+        appWidgetManager.notifyAppWidgetViewDataChanged(ids, R.id.stack_view)
+    }
+
 }

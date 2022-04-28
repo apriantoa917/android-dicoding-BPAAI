@@ -4,10 +4,13 @@
 
     <!-- Title menu xml -->
     <string name="menu_title_refresh">Refresh</string>
-    <string name="menu_title_blank" >" "</string>
+    <string name="menu_title_blank">" "</string>
     <string name="menu_title_bottom_nav_home">Home</string>
+    <string name="menu_title_bottom_nav_explore">Explore</string>
     <string name="menu_title_bottom_nav_profile">Profil</string>
     <string name="menu_title_info_dialog">Informasi</string>
+    <string name="menu_title_bottom_nav_folder">Folder</string>
+
 
     <!-- Content Description layout xml -->
     <string name="content_description_fab_add_story">Story Baru</string>
@@ -20,6 +23,11 @@
     <string name="content_description_btn_jump_up">Tombol scroll top</string>
     <string name="content_description_btn_camera_back">Tombol kembali ke halaman utama</string>
     <string name="content_description_btn_camera_info">Tombol informasi halaman kamera</string>
+    <string name="content_description_btn_select_location">Tombol pilih lokasi</string>
+    <string name="content_description_btn_clear_location">Tombol hapus lokasi story</string>
+    <string name="content_description_icon_maps">Ikon peta</string>
+    <string name="content_description_btn_close_dialog">Tombol tutup dialog</string>
+    <string name="content_description_btn_info">Tombol Informasi</string>
 
     <!-- Constant Value text -->
     <string name="const_uploaded_date">diupload pada 30 April 2022 00.00</string>
@@ -40,6 +48,29 @@
     <string name="const_text_days_ago">hari yang lalu</string>
     <string name="const_text_time_on">pada</string>
     <string name="const_text_pandora_box">Kotak Pandora</string>
+    <string name="const_text_widget_removed">Widget dihapus</string>
+    <string name="const_text_failed_fetch_data">Gagal mengambil data</string>
+    <string name="const_text_login_on">Login pada</string>
+    <string name="const_text_adapter_maps_default">Tampilan Default (Negara)</string>
+    <string name="const_text_adapter_maps_province">Sekitar Provinsi Saya</string>
+    <string name="const_text_adapter_maps_city">Sekitar Kota Saya</string>
+    <string name="const_text_adapter_maps_district">Sekitar Kecamatan Saya</string>
+    <string name="const_text_adapter_maps_around">Sekitar Lokasi Saya</string>
+    <string name="const_text_select_location">Pilih lokasi</string>
+    <string name="const_text_location_story">Lokasi Story</string>
+    <string name="const_text_description_story">Deskripsi Story</string>
+    <string name="const_text_pick_location">Pilih / tekan area untuk memilih lokasi</string>
+    <string name="const_text_pick_location_first">Silahkan memilih area lokasi terlebih dahulu</string>
+    <string name="const_text_cancel">Batalkan</string>
+    <string name="const_text_continue">Lanjutkan</string>
+    <string name="const_text_preview_image">Preview Gambar</string>
+    <string name="const_text_storage_location">Lokasi Penyimpanan</string>
+    <string name="const_text_tooltip_view_story">( Klik untuk melihat story )</string>
+    <string name="const_text_tooltip_pin_location">( Klik untuk memilih lokasi )</string>
+    <string name="const_text_uploaded_story">Story yang diunggah</string>
+    <string name="const_text_empty_data">- Tidak ada data -</string>
+    <string name="const_text_downloaded_story">Story yang diunduh</string>
+    <string name="const_text_try_again">Coba lagi</string>
 
     <!-- Button text layout xml -->
     <string name="button_text_ok">ok</string>
@@ -47,6 +78,7 @@
     <string name="button_text_signin">Masuk</string>
     <string name="button_text_signup">Daftar</string>
     <string name="button_text_logout">Keluar</string>
+    <string name="button_text_download">Unduh Story</string>
 
     <!-- API Error & Response Code -->
     <string name="API_success_upload_image">Yeay 😘, Gambar berhasil diupload</string>
@@ -59,7 +91,9 @@
 
     <!-- UI Error -->
     <string name="UI_validation_empty_story_description">Deskripsi konten harus diisi</string>
-    <string name="UI_validation_empty_email_password">Email dan Password harus diisi</string>
+    <string name="UI_validation_empty_email">Email harus diisi</string>
+    <string name="UI_validation_empty_password">Password harus diisi</string>
+    <string name="UI_validation_empty_name">Nama harus diisi</string>
     <string name="UI_validation_invalid_email">Format email tidak valid</string>
     <string name="UI_validation_empty_email_password_name">Nama, Email dan password harus diisi</string>
     <string name="UI_validation_password_rules">Password harus berisi minimal 6 karakter</string>
@@ -77,8 +111,7 @@
         👉🏻 Menekan tombol refresh atau menarik atas halaman ke bawah untuk merefresh data \n
         👉🏻 Memilih card untuk melihat detail story \n
         👉🏻 Menekan tombol tambah untuk membuat story baru \n
-        👉🏻 Menekan menu profil untuk melihat beberapa pengaturan \n
-        👉🏻 Menekan tombol jump up untuk lompat ke atas halaman dari story terakhir
+        👉🏻 Menekan menu profil untuk melihat beberapa pengaturan
     </string>
     <string name="UI_info_profile">
         Kamu bisa melakukan beberapa hal diantaranya : \n
@@ -94,4 +127,24 @@
         👉🏻 tombol shutter untuk menjepret gambar menggunakan kamera \n
         👉🏻 tombol switch untuk memutar lensa kamera
     </string>
+    <string name="UI_info_uploaded_story">
+        Bagian ini berisi kumpulan gambar yang anda unggah (upload) pada story dan tersimpan pada folder penyimpanan media Android anda. \n
+        Klik pada gambar untuk melihat preview dan lokasi gambar disimpan 👌.
+    </string>
+    <string name="UI_info_downloaded_story">
+        Bagian ini berisi kumpulan gambar yang anda unduh (download) pada story dan tersimpan pada folder penyimpanan media Android anda. \n
+        Klik pada gambar untuk melihat preview dan lokasi gambar disimpan 👌.
+    </string>
+    <string name="UI_info_image_downloaded">Gambar berhasil diunduh</string>
+    <string name="UI_validation_maps_select_area">Lokasi harus dipilih terlebih dahulu.Tekan pada lokasi yang diinginkan untuk memilih lokasi</string>
+    <string name="UI_validation_permission_location">Berikan aplikasi akses untuk membaca lokasi anda</string>
+    <string name="UI_error_camera_error">Gagal memuat kamera</string>
+    <string name="UI_info_intent_image">Pilih gambar</string>
+
+    <!-- WIDGET -->
+    <string name="appwidget_text">Dico Story</string>
+    <string name="add_widget">Tambah Widget</string>
+    <string name="app_widget_description">Widget untuk melihat story terbaru</string>
+
+
 </resources>

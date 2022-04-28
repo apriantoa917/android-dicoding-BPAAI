@@ -1,5 +1,6 @@
 package com.aprianto.dicostory.ui.splashscreen
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.WindowManager
@@ -16,7 +17,7 @@ import com.aprianto.dicostory.utils.dataStore
 import java.util.*
 import kotlin.concurrent.schedule
 
-
+@SuppressLint("CustomSplashScreen")
 class  SplashScreenActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySplashScreenBinding

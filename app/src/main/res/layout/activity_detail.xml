@@ -23,70 +23,101 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="3dp"
-        android:background="@color/light_gray"
+        android:background="@color/light_gray_200"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
-    <ImageView
-        android:id="@+id/default_avatar"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginVertical="16dp"
-        android:layout_marginStart="16dp"
-        android:contentDescription="@string/content_description_avatar_dico"
-        android:transitionName="user_avatar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider"
-        app:srcCompat="@drawable/bot" />
-
-    <ImageView
-        android:id="@+id/story_image"
+    <ScrollView
+        android:id="@+id/scrollView3"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:layout_marginTop="12dp"
-        android:background="@color/light_gray"
-        android:contentDescription="@string/content_description_image_story"
-        android:transitionName="story_image"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/default_avatar"
-        tools:ignore="ImageContrastCheck"
-        tools:srcCompat="@tools:sample/avatars" />
-
-    <TextView
-        android:id="@+id/story_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:fontFamily="sans-serif-medium"
-        android:text="@string/const_person_name"
-        android:textColor="@color/dicoding_secondary_700"
-        android:textSize="18sp"
-        android:transitionName="user_name"
-        app:layout_constraintBottom_toBottomOf="@+id/default_avatar"
-        app:layout_constraintStart_toEndOf="@+id/default_avatar"
-        app:layout_constraintTop_toTopOf="@+id/default_avatar" />
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="50dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/story_image">
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
             android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/default_avatar"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginVertical="16dp"
+                    android:layout_marginStart="16dp"
+                    android:contentDescription="@string/content_description_avatar_dico"
+                    android:transitionName="user_avatar"
+                    app:srcCompat="@drawable/bot" />
+
+                <TextView
+                    android:id="@+id/story_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="54dp"
+                    android:layout_marginEnd="16dp"
+                    android:ellipsize="end"
+                    android:fontFamily="sans-serif-medium"
+                    android:maxLines="1"
+                    android:text="@string/const_person_name"
+                    android:textColor="@color/dicoding_secondary_700"
+                    android:textSize="18sp"
+                    android:transitionName="user_name" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/label_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_toEndOf="@id/default_avatar"
+                tools:text="Story Location" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/light_gray_200">
+
+                <ImageView
+                    android:id="@+id/story_image"
+                    android:layout_width="400dp"
+                    android:layout_height="400dp"
+                    android:layout_centerHorizontal="true"
+                    android:contentDescription="@string/content_description_image_story"
+                    android:scaleType="fitCenter"
+                    android:transitionName="story_image"
+                    tools:srcCompat="@tools:sample/avatars" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/btn_download"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginEnd="8dp"
+                    android:contentDescription="@string/button_text_download"
+                    android:src="@drawable/ic_baseline_download_24"
+                    app:backgroundTint="@color/dicoding_secondary_500"
+                    app:tint="@color/white"
+                    app:useCompatPadding="true" />
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/story_description"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="30dp"
+                android:layout_marginTop="16dp"
                 android:lineHeight="25dp"
                 android:text="@string/const_lorem_ipsum"
                 android:textColor="@color/black"
@@ -94,20 +125,32 @@
                 android:transitionName="story_description"
                 tools:targetApi="p" />
 
-            <TextView
-                android:id="@+id/story_upload_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginTop="16dp"
-                android:text="@string/const_uploaded_date"
-                android:textColor="@color/gray"
-                android:textSize="14sp"
-                android:textStyle="italic"
-                android:transitionName="story_upload_time" />
-        </androidx.appcompat.widget.LinearLayoutCompat>
 
+        </androidx.appcompat.widget.LinearLayoutCompat>
     </ScrollView>
 
+    <TextView
+        android:id="@+id/story_upload_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/light_gray_100"
+        android:gravity="end"
+        android:padding="16dp"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="@string/const_uploaded_date" />
 
+    <include
+        android:id="@+id/loading"
+        layout="@layout/custom_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

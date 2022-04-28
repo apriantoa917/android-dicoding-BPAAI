@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="10dp"
+    android:layout_marginTop="16dp"
     android:background="@drawable/custom_story_container"
     android:paddingVertical="15dp">
 
@@ -36,10 +36,13 @@
 
     <TextView
         android:id="@+id/story_name"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="54dp"
+        android:layout_marginEnd="16dp"
+        android:ellipsize="end"
         android:fontFamily="sans-serif-medium"
+        android:maxLines="1"
         android:text="@string/const_person_name"
         android:textColor="@color/dicoding_secondary_700"
         android:textSize="18sp"

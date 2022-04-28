@@ -2,19 +2,19 @@ package com.aprianto.dicostory.ui.dashboard.story
 
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.util.Size
 import android.view.Gravity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import com.aprianto.dicostory.R
 import com.aprianto.dicostory.databinding.ActivityCameraBinding
 import com.aprianto.dicostory.utils.Helper
+import java.lang.StringBuilder
 
 class CameraActivity : AppCompatActivity() {
 
@@ -45,7 +45,7 @@ class CameraActivity : AppCompatActivity() {
                 onBackPressed()
             }
             it.btnInfo.setOnClickListener {
-                Helper.showDialogInfo(this, getString(R.string.UI_info_camera),Gravity.START)
+                Helper.showDialogInfo(this, getString(R.string.UI_info_camera), Gravity.START)
             }
         }
         startCamera()
@@ -56,6 +56,7 @@ class CameraActivity : AppCompatActivity() {
         cameraProviderFuture.addListener({
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
             val imageAnalysis = ImageAnalysis.Builder()
+                /* compress image to match API requirements -> max file 1MB to be uploaded */
                 .setTargetResolution(Size(480, 720))
                 .build()
             val preview = Preview.Builder()
@@ -73,7 +74,13 @@ class CameraActivity : AppCompatActivity() {
                     imageCapture, imageAnalysis
                 )
             } catch (e: Exception) {
-                Helper.showDialogInfo(this, "Fail to launch camera : ${e.message}")
+                Helper.showDialogInfo(
+                    this,
+                    StringBuilder(getString(R.string.UI_error_camera_error))
+                        .append(" : ")
+                        .append(e.message)
+                        .toString()
+                )
             }
         }, ContextCompat.getMainExecutor(this))
     }
@@ -83,7 +90,6 @@ class CameraActivity : AppCompatActivity() {
             ActivityResultContracts.StartActivityForResult()
         ) { result ->
             if (result.resultCode == RESULT_OK) {
-                Log.i("TEST_GALERY", "Galeri berhasil dipilih dan akan mengarah ke new")
                 val selectedImg: Uri = result.data?.data as Uri
                 val myFile = Helper.uriToFile(selectedImg, this@CameraActivity)
                 val intent = Intent(this@CameraActivity, NewStoryActivity::class.java)
@@ -102,7 +108,7 @@ class CameraActivity : AppCompatActivity() {
         val intent = Intent()
         intent.action = Intent.ACTION_GET_CONTENT
         intent.type = "image/*"
-        val chooser = Intent.createChooser(intent, "Choose a Picture")
+        val chooser = Intent.createChooser(intent, getString(R.string.UI_info_intent_image))
         openGalleryLauncher.launch(chooser)
     }
 
