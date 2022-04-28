@@ -9,12 +9,12 @@
     android:padding="24dp">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/btn_close_preview"
         android:layout_alignBottom="@+id/btn_close_preview"
         android:gravity="center_vertical"
-        android:text="Preview Image"
+        android:text="@string/const_text_preview_image"
         android:textColor="@color/dicoding_secondary_500"
         android:textSize="26sp"
         android:textStyle="bold" />
@@ -28,7 +28,8 @@
         android:backgroundTint="@color/dicoding_secondary_500"
         android:padding="8dp"
         android:src="@drawable/ic_baseline_clear_24"
-        app:tint="@color/white" />
+        app:tint="@color/white"
+        android:contentDescription="@string/content_description_btn_close_dialog" />
 
     <ImageView
         android:id="@+id/image_preview"
@@ -37,7 +38,8 @@
         android:layout_below="@id/btn_close_preview"
         android:layout_marginTop="16dp"
         android:background="@color/light_gray_200"
-        tools:srcCompat="@tools:sample/avatars" />
+        tools:srcCompat="@tools:sample/avatars"
+        android:contentDescription="@string/content_description_image_story" />
 
     <TextView
         android:id="@+id/label_path"
@@ -45,7 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/image_preview"
         android:layout_marginTop="16dp"
-        android:text="Lokasi Penyimpanan"
+        android:text="@string/const_text_storage_location"
         android:textColor="@color/dicoding_secondary_500"
         android:textStyle="bold"
         android:textSize="16sp" />

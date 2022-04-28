@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import com.aprianto.dicostory.data.model.Login
 import com.aprianto.dicostory.data.model.Register
 import com.aprianto.dicostory.data.repository.remote.ApiConfig
+import com.aprianto.dicostory.utils.Constanta
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -22,8 +24,6 @@ class AuthViewModel : ViewModel() {
     val loginResult = MutableLiveData<Login>()
     val registerResult = MutableLiveData<Register>()
 
-    private val TAG = AuthViewModel::class.simpleName
-
     fun login(email: String, password: String) {
         tempEmail.postValue(email) // temporary hold email for save user preferences
         loading.postValue(View.VISIBLE)
@@ -33,15 +33,18 @@ class AuthViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     loginResult.postValue(response.body())
                 } else {
-                    val errorBody: Login? = response.body()
-                    error.postValue(errorBody?.message)
+                    response.errorBody()?.let {
+                        val errorResponse = JSONObject(it.string())
+                        val errorMessages = errorResponse.getString("message")
+                        error.postValue("LOGIN ERROR : $errorMessages")
+                    }
                 }
                 loading.postValue(View.GONE)
             }
 
             override fun onFailure(call: Call<Login>, t: Throwable) {
                 loading.postValue(View.GONE)
-                Log.e(TAG, "onFailure Call: ${t.message}")
+                Log.e(Constanta.TAG_AUTH, "onFailure Call: ${t.message}")
                 error.postValue(t.message)
             }
         })
@@ -55,15 +58,18 @@ class AuthViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     registerResult.postValue(response.body())
                 } else {
-                    val errorBody: Register? = response.body()
-                    error.postValue(errorBody?.message)
+                    response.errorBody()?.let {
+                        val errorResponse = JSONObject(it.string())
+                        val errorMessages = errorResponse.getString("message")
+                        error.postValue("REGISTER ERROR : $errorMessages")
+                    }
                 }
                 loading.postValue(View.GONE)
             }
 
             override fun onFailure(call: Call<Register>, t: Throwable) {
                 loading.postValue(View.GONE)
-                Log.e(TAG, "onFailure Call: ${t.message}")
+                Log.e(Constanta.TAG_AUTH, "onFailure Call: ${t.message}")
                 error.postValue(t.message)
             }
         })

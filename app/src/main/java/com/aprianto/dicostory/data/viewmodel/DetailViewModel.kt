@@ -5,6 +5,8 @@ import android.os.StrictMode
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.aprianto.dicostory.R
+import com.aprianto.dicostory.utils.Constanta
 import com.aprianto.dicostory.utils.Helper
 import java.io.File
 import java.io.FileOutputStream
@@ -38,9 +40,9 @@ class DetailViewModel : ViewModel() {
             StrictMode.setThreadPolicy(policy)
 
             /* start download */
-            val ucon: URLConnection = url.openConnection()
+            val connection: URLConnection = url.openConnection()
             var inputStream: InputStream? = null
-            val httpConn: HttpURLConnection = ucon as HttpURLConnection
+            val httpConn: HttpURLConnection = connection as HttpURLConnection
             httpConn.requestMethod = "GET"
             httpConn.connect()
             if (httpConn.responseCode == HttpURLConnection.HTTP_OK) {
@@ -59,19 +61,21 @@ class DetailViewModel : ViewModel() {
                 fos.write(buffer, 0, bufferLength)
                 downloadedSize += bufferLength
                 val progress = (downloadedSize * 100) / totalSize
-                Log.i("DOWNLOAD", "download ${progress}% : $downloadedSize of $totalSize")
+                Log.i(
+                    Constanta.TAG_DOWNLOAD,
+                    "downloading ${progress}% : $downloadedSize of $totalSize"
+                )
             }
             fos.close()
-            Log.d("DOWNLOAD", "Image Saved in directory..")
-            error.postValue("Gambar berhasil di simpan")
+            error.postValue(context.getString(R.string.UI_info_image_downloaded))
         } catch (io: IOException) {
             io.printStackTrace()
             error.postValue(io.stackTraceToString())
-            Log.e("DOWNLOAD", io.stackTraceToString())
+            Log.e(Constanta.TAG_DOWNLOAD, io.stackTraceToString())
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
             error.postValue(e.stackTraceToString())
-            Log.e("DOWNLOAD", e.stackTraceToString())
+            Log.e(Constanta.TAG_DOWNLOAD, e.stackTraceToString())
         }
         isDownloading.postValue(false)
     }

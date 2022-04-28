@@ -26,11 +26,7 @@ class StoryAdapter : PagingDataAdapter<Story, StoryAdapter.ViewHolder>(DIFF_CALL
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val data = getItem(position)
-        if (data != null) {
-            Log.i("TESTING", "Ada data di set : ${data.id}")
-            holder.bind(data)
-        } else Log.i("TESTING", "Ada error saat set data ke : $position")
+        getItem(position)?.let { holder.bind(it) }
     }
 
     companion object {
@@ -68,9 +64,9 @@ class StoryAdapter : PagingDataAdapter<Story, StoryAdapter.ViewHolder>(DIFF_CALL
                     try {
                         intent.putExtra(Constanta.StoryDetail.Latitude.name, story.lat.toString())
                         intent.putExtra(Constanta.StoryDetail.Longitude.name, story.lon.toString())
-                    }catch (e:Exception){
-                        // skip put extra jika location kosong
-                        Log.e("STORY_LOCATION",e.toString())
+                    } catch (e: Exception) {
+                        /* if story don't have location (lat, lon is null) -> skip put extra*/
+                        Log.e(Constanta.TAG_STORY, e.toString())
                     }
                     intent.putExtra(
                         Constanta.StoryDetail.ContentDescription.name,
@@ -94,7 +90,7 @@ class StoryAdapter : PagingDataAdapter<Story, StoryAdapter.ViewHolder>(DIFF_CALL
                     val optionsCompat: ActivityOptionsCompat =
                         ActivityOptionsCompat.makeSceneTransitionAnimation(
                             itemView.context as Activity,
-                            /* transition between recyclerview & acitvity detail */
+                            /* transition between recyclerview & activity detail */
                             androidx.core.util.Pair(storyImage, "story_image"),
                             androidx.core.util.Pair(storyName, "user_name"),
                             androidx.core.util.Pair(defaultAvatar, "user_avatar"),

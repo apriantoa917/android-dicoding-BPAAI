@@ -10,11 +10,15 @@ import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.graphics.Matrix
 import android.graphics.drawable.ColorDrawable
 import android.location.Geocoder
 import android.net.Uri
 import android.os.Environment
+import android.os.StrictMode
 import android.provider.Settings
 import android.util.Log
 import android.view.Gravity
@@ -25,8 +29,6 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.aprianto.dicostory.R
 import com.aprianto.dicostory.ui.widget.RecentStoryWidget
-import com.google.android.gms.maps.model.BitmapDescriptor
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import java.io.*
 import java.net.HttpURLConnection
 import java.net.URL
@@ -37,12 +39,12 @@ import java.util.*
 
 object Helper {
 
-    /*
+    /* -------------------------
     * PERMISSION
-    * */
+    * ------------------------- */
 
     fun notifyGivePermission(context: Context, message: String) {
-        val dialog = Helper.dialogInfoBuilder(context, message)
+        val dialog = dialogInfoBuilder(context, message)
         val button = dialog.findViewById<Button>(R.id.button_ok)
         button.setOnClickListener {
             dialog.dismiss()
@@ -65,9 +67,9 @@ object Helper {
         context.startActivity(intent)
     }
 
-    /*
+    /* -------------------------
     *  DATE FORMAT
-    * */
+    * ------------------------- */
     private const val timestampFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
     private const val simpleDateFormat = "dd MMM yyyy HH.mm"
 
@@ -79,12 +81,12 @@ object Helper {
     @SuppressLint("ConstantLocale")
     val simpleDate = SimpleDateFormat(simpleDateFormat, Locale.getDefault())
 
-    // curent date in date
+    /* curent date in date */
     private fun getCurrentDate(): Date {
         return Date()
     }
 
-    // curent date in string
+    /* curent date in string */
     fun getCurrentDateString(): String = defaultDate.format(getCurrentDate())
 
     @SuppressLint("ConstantLocale")
@@ -93,19 +95,18 @@ object Helper {
         Locale.getDefault()
     ).format(System.currentTimeMillis())
 
-    // string simpleDate (unformatted) to date
+    /* string simpleDate (unformatted) to date */
     private fun parseSimpleDate(dateValue: String): Date {
         return defaultDate.parse(dateValue) as Date
     }
 
-    // simpleDate (Date) to string
+    /* simpleDate (Date) to string */
     private fun getSimpleDate(date: Date): String = simpleDate.format(date)
 
-    // string to string
+    /* string to string */
     fun getSimpleDateString(dateValue: String): String = getSimpleDate(parseSimpleDate(dateValue))
 
-
-    // string UTC format to date
+    /* string UTC format to date */
     private fun parseUTCDate(timestamp: String): Date {
         return try {
             val formatter = SimpleDateFormat(timestampFormat, Locale.getDefault())
@@ -116,6 +117,7 @@ object Helper {
         }
     }
 
+    /* get expected upload time, ie : uploaded 2 mins ago */
     fun getTimelineUpload(context: Context, timestamp: String): String {
         val currentTime = getCurrentDate()
         val uploadTime = parseUTCDate(timestamp)
@@ -133,16 +135,18 @@ object Helper {
         return label
     }
 
+    /* get readable date of uploaded story, ie : 30 April 2022 00.00 */
     fun getUploadStoryTime(timestamp: String): String {
         val date: Date = parseUTCDate(timestamp)
         return getSimpleDate(date)
     }
 
-/*
-* UI CONTROLLER
-* */
 
-    // custom dialog info builder -> reuse to another invocation with custom ok button action
+    /* -------------------------
+    *  CUSTOM DIALOG
+    * ------------------------- */
+
+    /* custom dialog info builder -> reuse to another invocation with custom ok button action */
     fun dialogInfoBuilder(
         context: Context,
         message: String,
@@ -169,7 +173,7 @@ object Helper {
         return dialog
     }
 
-    // ready use to go dialog with related params
+    /* ready use to go dialog with related params */
     fun showDialogInfo(
         context: Context,
         message: String,
@@ -183,6 +187,7 @@ object Helper {
         dialog.show()
     }
 
+    /* show preview image in folder fragments */
     fun showDialogPreviewImage(
         context: Context,
         image: Bitmap,
@@ -210,9 +215,9 @@ object Helper {
         dialog.show()
     }
 
-/*
-* CAMERA INSTANCE HELPER
-* */
+    /* -------------------------
+    * FILE HELPER & BITMAP
+    * ------------------------- */
 
     private fun createCustomTempFile(context: Context): File {
         val storageDir: File? = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
@@ -232,15 +237,17 @@ object Helper {
         return myFile
     }
 
-    private fun getRandomString(len: Int): String {
+    private fun getRandomString(len: Int = 20): String {
         val alphabet: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
         return List(len) { alphabet.random() }.joinToString("")
     }
 
+    /* get default exported file name */
     fun getDefaultFileName(): String {
-        return "STORY-${getRandomString(20)}.jpg"
+        return "STORY-${getRandomString()}.jpg"
     }
 
+    /* create export file (story / download) to exact path location */
     fun createFile(
         application: Application,
         folder: String = "story",
@@ -252,8 +259,50 @@ object Helper {
         val outputDirectory = if (
             mediaDir != null && mediaDir.exists()
         ) mediaDir else application.filesDir
-
         return File(outputDirectory, filename)
+    }
+
+    /* load bitmap from exact path location */
+    fun loadImageFromStorage(path: String): Bitmap? {
+        val imgFile = File(path)
+        return if (imgFile.exists()) {
+            BitmapFactory.decodeFile(imgFile.absolutePath)
+        } else null
+    }
+
+    /* load BITMAP from string URL */
+    fun bitmapFromURL(context: Context, urlString: String): Bitmap {
+        return try {
+            /* allow access content from URL internet */
+            val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
+            StrictMode.setThreadPolicy(policy)
+
+            /* fetch image data from URL */
+            val url = URL(urlString)
+            val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
+            connection.doInput = true
+            connection.connect()
+            val input: InputStream = connection.inputStream
+            BitmapFactory.decodeStream(input)
+        } catch (e: IOException) {
+            BitmapFactory.decodeResource(context.resources, R.drawable.bot)
+        }
+    }
+
+    fun resizeBitmap(bm: Bitmap, newWidth: Int, newHeight: Int): Bitmap {
+        val width = bm.width
+        val height = bm.height
+        val scaleWidth = newWidth.toFloat() / width
+        val scaleHeight = newHeight.toFloat() / height
+
+        /* init matrix to resize bitmap */
+        val matrix = Matrix()
+        matrix.postScale(scaleWidth, scaleHeight)
+
+        /* recreate new bitmap as new defined size */
+        val resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false)
+        bm.recycle()
+        return resizedBitmap
     }
 
     fun rotateBitmap(bitmap: Bitmap, isBackCamera: Boolean = false): Bitmap {
@@ -284,59 +333,12 @@ object Helper {
         }
     }
 
-    fun compressBitmap(bitmap: Bitmap, width: Int, height: Int): Bitmap {
-        val matrix = Matrix()
-        matrix.setRectToRect(
-            RectF(0F, 0F, bitmap.width.toFloat(), bitmap.height.toFloat()),
-            RectF(0F, 0F, width.toFloat(), height.toFloat()),
-            Matrix.ScaleToFit.CENTER
-        )
-        val scaledBitmap: Bitmap =
-            Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
-        bitmap.recycle()
-        return scaledBitmap
-    }
-/* BITMAP from URL*/
+    /* -------------------------
+    * GEOLOCATION & GEOCODER
+    * ------------------------- */
 
-    fun bitmapFromURL(context: Context, urlString: String): Bitmap {
-        return try {
-            val url = URL(urlString)
-            val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
-            connection.doInput = true
-            connection.connect()
-            val input: InputStream = connection.inputStream
-            BitmapFactory.decodeStream(input)
-        } catch (e: IOException) {
-            BitmapFactory.decodeResource(context.resources, R.drawable.bot)
-        }
-    }
-
-    fun bitmapDescriptor(bitmap: Bitmap): BitmapDescriptor {
-        return BitmapDescriptorFactory.fromBitmap(bitmap)
-    }
-
-    fun getResizedBitmap(bm: Bitmap, newWidth: Int, newHeight: Int): Bitmap {
-        val width = bm.width
-        val height = bm.height
-        val scaleWidth = newWidth.toFloat() / width
-        val scaleHeight = newHeight.toFloat() / height
-
-        // CREATE A MATRIX FOR THE MANIPULATION
-        val matrix = Matrix()
-        // RESIZE THE BIT MAP
-        matrix.postScale(scaleWidth, scaleHeight)
-
-        // "RECREATE" THE NEW BITMAP
-        val resizedBitmap = Bitmap.createBitmap(
-            bm, 0, 0, width, height, matrix, false
-        )
-        bm.recycle()
-        return resizedBitmap
-    }
-
-/* GET LOCATION INFO */
-
-    fun getStoryLocation(
+    /* parse lat lon coordinate into readable address */
+    fun parseAddressLocation(
         context: Context,
         lat: Double,
         lon: Double
@@ -354,14 +356,10 @@ object Helper {
         }
     }
 
-    fun loadImageFromStorage(path: String): Bitmap? {
-        val imgFile = File(path)
-        return if (imgFile.exists()) {
-            BitmapFactory.decodeFile(imgFile.absolutePath)
-        } else null
-    }
 
-    /* WIDGET */
+    /* -------------------------
+    * WIDGET
+    * ------------------------- */
 
     fun updateWidgetData(context: Context) {
         Log.i("TEST_WIDGET", "Requested update data")
@@ -369,7 +367,7 @@ object Helper {
         val ids: IntArray = appWidgetManager.getAppWidgetIds(
             ComponentName(context, RecentStoryWidget::class.java)
         )
-        /* if widget update requested -> request load new data */
+        /* if widget update requested -> refresh widget data */
         appWidgetManager.notifyAppWidgetViewDataChanged(ids, R.id.stack_view)
     }
 

@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources
-import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -31,7 +30,6 @@ import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 
-
 class NewStoryPickLocation : AppCompatActivity(), OnMapReadyCallback, GoogleMap.InfoWindowAdapter {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var mMap: GoogleMap
@@ -40,7 +38,6 @@ class NewStoryPickLocation : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityNewStoryPickLocationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -50,8 +47,8 @@ class NewStoryPickLocation : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
             viewModel.isLocationPicked.postValue(false)
             finish()
         }
-
         binding.btnSelectLocation.setOnClickListener {
+            /* check is location picked before next step */
             if (viewModel.isLocationPicked.value == true) {
                 val intent = Intent()
                 intent.putExtra(
@@ -71,10 +68,11 @@ class NewStoryPickLocation : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
             } else {
                 Helper.showDialogInfo(
                     this,
-                    "Lokasi harus dipilih, silahkan menekan area yang diinginkan lalu pilih lokasi"
+                    getString(R.string.UI_validation_maps_select_area)
                 )
             }
         }
+
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -82,8 +80,10 @@ class NewStoryPickLocation : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        setMapStyle()
         mMap.uiSettings.isMyLocationButtonEnabled = true
+        mMap.uiSettings.isCompassEnabled = true
+        mMap.uiSettings.isMapToolbarEnabled = true
+        mMap.uiSettings.isTiltGesturesEnabled = true
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(Constanta.indonesiaLocation, 4f))
         mMap.setInfoWindowAdapter(this)
         mMap.setOnInfoWindowClickListener { marker ->
@@ -115,13 +115,13 @@ class NewStoryPickLocation : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
                     )
             )?.showInfoWindow()
         }
-
+        setMapStyle()
         getMyLastLocation()
     }
 
     private fun postLocationSelected(lat: Double, lon: Double) {
         val address =
-            Helper.getStoryLocation(
+            Helper.parseAddressLocation(
                 this,
                 lat,
                 lon
@@ -168,6 +168,7 @@ class NewStoryPickLocation : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
             }
         }
 
+    /* check permission in this activity -> related to fusedLocation requirements*/
     private fun checkPermission(permission: String): Boolean {
         return ContextCompat.checkSelfPermission(
             this,
@@ -179,26 +180,16 @@ class NewStoryPickLocation : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
         if (checkPermission(Manifest.permission.ACCESS_FINE_LOCATION) &&
             checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
         ) {
-            fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
-                if (location != null) {
+            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                /* if user location fetched -> add marker & trigger input to user location */
+                location?.let {
                     mMap.addMarker(
-                        MarkerOptions()
-                            .position(
-                                LatLng(
-                                    location.latitude,
-                                    location.longitude
-                                )
-                            )
+                        MarkerOptions().position(LatLng(it.latitude, it.longitude))
                     )
                     mMap.animateCamera(
-                        CameraUpdateFactory.newLatLngZoom(
-                            LatLng(
-                                location.latitude,
-                                location.longitude
-                            ), 20f
-                        )
+                        CameraUpdateFactory.newLatLngZoom(LatLng(it.latitude, it.longitude), 20f)
                     )
-                    postLocationSelected(location.latitude, location.longitude)
+                    postLocationSelected(it.latitude, it.longitude)
                 }
             }
         } else {
@@ -215,10 +206,11 @@ class NewStoryPickLocation : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
         return null
     }
 
+    /* while marker touched -> show custom view */
     override fun getInfoWindow(marker: Marker): View {
         val bindingTooltips =
             CustomTooltipPickLocationStoryBinding.inflate(LayoutInflater.from(this))
-        bindingTooltips.location.text = Helper.getStoryLocation(
+        bindingTooltips.location.text = Helper.parseAddressLocation(
             this,
             marker.position.latitude, marker.position.longitude
         )

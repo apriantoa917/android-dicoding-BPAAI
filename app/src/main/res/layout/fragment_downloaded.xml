@@ -23,19 +23,21 @@
 
                 <TextView
                     android:id="@+id/label_story"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:text="History Story"
+                    android:text="@string/const_text_uploaded_story"
                     android:textColor="@color/dicoding_secondary_700"
                     android:textSize="22sp"
                     android:textStyle="bold" />
 
                 <ImageView
+
                     android:id="@+id/btn_info_story"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_alignParentEnd="true"
+                    android:contentDescription="@string/content_description_btn_info"
                     android:paddingVertical="5dp"
                     android:src="@drawable/ic_baseline_info_24"
                     app:tint="@color/dicoding_secondary_700" />
@@ -54,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:gravity="center"
-                android:text="- tidak ada data -"
+                android:text="@string/const_text_empty_data"
                 android:textSize="16sp" />
 
 
@@ -77,10 +79,10 @@
 
                 <TextView
                     android:id="@+id/label_download"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:text="Hasil Download"
+                    android:text="@string/const_text_downloaded_story"
                     android:textColor="@color/dicoding_secondary_700"
                     android:textSize="22sp"
                     android:textStyle="bold" />
@@ -91,6 +93,7 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_alignParentEnd="true"
+                    android:contentDescription="@string/content_description_btn_info"
                     android:paddingVertical="5dp"
                     android:src="@drawable/ic_baseline_info_24"
                     app:tint="@color/dicoding_secondary_700" />
@@ -109,7 +112,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:gravity="center"
-                android:text="- tidak ada data -"
+                android:text="@string/const_text_empty_data"
                 android:textSize="16sp" />
 
             <androidx.recyclerview.widget.RecyclerView

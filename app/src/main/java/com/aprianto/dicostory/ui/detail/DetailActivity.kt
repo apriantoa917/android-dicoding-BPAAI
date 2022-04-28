@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import com.aprianto.dicostory.data.viewmodel.DetailViewModel
-import com.aprianto.dicostory.data.viewmodel.FolderViewModel
 import com.aprianto.dicostory.databinding.ActivityDetailBinding
 import com.aprianto.dicostory.utils.Constanta
 import com.aprianto.dicostory.utils.Helper
@@ -79,7 +78,7 @@ class DetailActivity : AppCompatActivity() {
             val lat = intent.getData(Constanta.StoryDetail.Latitude.name)
             val lon = intent.getData(Constanta.StoryDetail.Longitude.name)
             binding.labelLocation.text =
-                Helper.getStoryLocation(this, lat.toDouble(), lon.toDouble())
+                Helper.parseAddressLocation(this, lat.toDouble(), lon.toDouble())
             binding.labelLocation.isVisible = true
         } catch (e: Exception) {
             binding.labelLocation.isVisible = false

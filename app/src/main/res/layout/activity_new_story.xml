@@ -33,6 +33,7 @@
             android:id="@+id/ic_pin"
             android:layout_width="20dp"
             android:layout_height="20dp"
+            android:contentDescription="@string/content_description_btn_select_location"
             android:src="@drawable/ic_baseline_map_24"
             app:tint="@color/white" />
 
@@ -41,7 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_toEndOf="@+id/ic_pin"
-            android:text="Pilih lokasi"
+            android:text="@string/const_text_select_location"
             android:textColor="@color/white" />
     </RelativeLayout>
 
@@ -58,8 +59,8 @@
             android:id="@+id/label_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Lokasi Story"
             android:layout_above="@id/field_location"
+            android:text="@string/const_text_location_story"
             android:textColor="@color/dicoding_secondary_700"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -69,6 +70,7 @@
             android:layout_width="38dp"
             android:layout_height="38dp"
             android:layout_alignParentEnd="true"
+            android:contentDescription="@string/content_description_btn_clear_location"
             android:padding="6dp"
             android:src="@drawable/ic_baseline_clear_24" />
 
@@ -84,7 +86,8 @@
             android:lineHeight="20dp"
             android:padding="8dp"
             android:textSize="12sp"
-            tools:text="@string/const_lorem_ipsum" />
+            tools:text="@string/const_lorem_ipsum"
+            tools:ignore="UnusedAttribute" />
     </RelativeLayout>
 
 
@@ -93,7 +96,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Deskripsi Story"
+        android:text="@string/const_text_description_story"
         android:textColor="@color/dicoding_secondary_700"
         android:textSize="16sp"
         android:textStyle="bold"

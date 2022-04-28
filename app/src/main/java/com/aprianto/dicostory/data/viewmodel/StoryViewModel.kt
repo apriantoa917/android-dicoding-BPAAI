@@ -27,15 +27,10 @@ class StoryViewModel : ViewModel() {
     val storyList = MutableLiveData<List<Story>>()
     val error = MutableLiveData("")
     val isError = MutableLiveData(true)
-
-
     val isLocationPicked = MutableLiveData(false) // init for location new story not selected
     val coordinateLatitude = MutableLiveData(0.0)
     val coordinateLongitude = MutableLiveData(0.0)
     val coordinateTemp = MutableLiveData(Constanta.indonesiaLocation)
-
-    private val TAG = StoryViewModel::class.simpleName
-
     fun loadStoryLocationData(context: Context, token: String) {
         val client = ApiConfig.getApiService().getStoryListLocation(token, 100)
         client.enqueue(object : Callback<StoryList> {
@@ -52,7 +47,7 @@ class StoryViewModel : ViewModel() {
             override fun onFailure(call: Call<StoryList>, t: Throwable) {
                 loading.postValue(View.GONE)
                 isError.postValue(true)
-                Log.e(TAG, "onFailure Call: ${t.message}")
+                Log.e(Constanta.TAG_STORY, "onFailure Call: ${t.message}")
                 error.postValue("${context.getString(R.string.API_error_fetch_data)} : ${t.message}")
             }
         })
@@ -105,7 +100,7 @@ class StoryViewModel : ViewModel() {
 
             override fun onFailure(call: Call<StoryUpload>, t: Throwable) {
                 loading.postValue(View.GONE)
-                Log.e(TAG, "onFailure Call: ${t.message}")
+                Log.e(Constanta.TAG_STORY, "onFailure Call: ${t.message}")
                 error.postValue("${context.getString(R.string.API_error_send_payload)} : ${t.message}")
             }
         })

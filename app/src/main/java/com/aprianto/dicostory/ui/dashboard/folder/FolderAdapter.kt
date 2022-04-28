@@ -26,8 +26,7 @@ class FolderAdapter(
     override fun getItemCount(): Int = data.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val folder = data[position]
-        holder.bind(folder)
+        holder.bind(data[position])
     }
 
     inner class ViewHolder(private val binding: RvFolderBinding) :
@@ -35,6 +34,7 @@ class FolderAdapter(
         fun bind(folder: Folder) {
             binding.image.setImageBitmap(folder.asset)
             binding.image.setOnClickListener {
+                /* when image items clicked -> show preview original image of bitmap from exact path location */
                 Helper.loadImageFromStorage(folder.path)?.let {
                     Helper.showDialogPreviewImage(binding.root.context, it, folder.path)
                 }

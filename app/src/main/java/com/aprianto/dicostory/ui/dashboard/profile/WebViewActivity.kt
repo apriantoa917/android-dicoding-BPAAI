@@ -58,6 +58,7 @@ class WebViewActivity : AppCompatActivity() {
         }
     }
 
+    /* handling back action -> if not root of URL, webview can back to previous URL */
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (event!!.action === KeyEvent.ACTION_DOWN) {
             when (keyCode) {

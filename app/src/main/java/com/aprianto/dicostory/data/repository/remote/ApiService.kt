@@ -28,12 +28,6 @@ interface ApiService {
     ): Call<Register>
 
     @GET("stories")
-    fun getStoryList(
-        @Header("Authorization") token: String,
-        @Query("size") size: Int
-    ): Call<StoryList>
-
-    @GET("stories")
     suspend fun getStoryList(
         @Header("Authorization") token: String,
         @Query("page") page: Int,

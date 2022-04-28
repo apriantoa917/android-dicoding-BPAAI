@@ -23,7 +23,11 @@
     <string name="content_description_btn_jump_up">Button scroll top</string>
     <string name="content_description_btn_camera_back">Button Back to homescreen</string>
     <string name="content_description_btn_camera_info">Button Info Dialog</string>
-
+    <string name="content_description_btn_select_location">Button select location</string>
+    <string name="content_description_btn_clear_location">Button clear story location</string>
+    <string name="content_description_icon_maps">Icon maps</string>
+    <string name="content_description_btn_info">Button information</string>
+    <string name="content_description_btn_close_dialog">Button close dialog</string>
 
     <!-- Constant Value text -->
     <string name="const_lorem_ipsum" translatable="false">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
@@ -51,9 +55,32 @@
     <string name="const_text_pandora_box">Pandora Box</string>
     <string name="const_empty_text" translatable="false">NO DATA</string>
     <string name="const_update_data" translatable="false">Update Data</string>
+    <string name="const_text_login_on">Login on</string>
+    <string name="const_text_adapter_maps_default">Default View (Country)</string>
+    <string name="const_text_adapter_maps_province">Around My Province</string>
+    <string name="const_text_adapter_maps_city">Around My City</string>
+    <string name="const_text_adapter_maps_district">Around My District</string>
+    <string name="const_text_adapter_maps_around">Around My Location</string>
+    <string name="const_text_widget_removed">Widget removed</string>
+    <string name="const_text_failed_fetch_data">Failed fetch data</string>
+    <string name="const_text_select_location">Select location</string>
+    <string name="const_text_location_story">Story Location</string>
+    <string name="const_text_description_story">Story Description</string>
+    <string name="const_text_pick_location">Select / press area to select location</string>
+    <string name="const_text_pick_location_first">Please select the location area first</string>
+    <string name="const_text_cancel">Cancel</string>
+    <string name="const_text_continue">Continue</string>
+    <string name="const_text_preview_image">Preview Image</string>
+    <string name="const_text_storage_location">Storage Location</string>
+    <string name="const_text_tooltip_view_story">( Click to see story )</string>
+    <string name="const_text_tooltip_pin_location">( Click to select location )</string>
+    <string name="const_text_uploaded_story">Uploaded Story</string>
+    <string name="const_text_empty_data">- Data not found -</string>
+    <string name="const_text_downloaded_story">Downloaded Story</string>
+    <string name="const_text_try_again">Try again</string>
 
     <!-- Button text layout xml -->
-    <string name="button_text_ok">ok</string>
+    <string name="button_text_ok">OK</string>
     <string name="button_text_upload_story">Upload Story</string>
     <string name="button_text_signin">Sign In</string>
     <string name="button_text_signup">Sign Up</string>
@@ -71,7 +98,9 @@
 
     <!-- UI Error -->
     <string name="UI_validation_empty_story_description">Field description must be filled</string>
-    <string name="UI_validation_empty_email_password">Field Email and Password must be filled</string>
+    <string name="UI_validation_empty_email">Field Email must be filled</string>
+    <string name="UI_validation_empty_password">Field Password must be filled</string>
+    <string name="UI_validation_empty_name">Field Name must be filled</string>
     <string name="UI_validation_invalid_email">Email format is invalid</string>
     <string name="UI_validation_empty_email_password_name">Field Name, Email and Password must be filled</string>
     <string name="UI_validation_password_rules">Password must contain at least 6 characters</string>
@@ -89,8 +118,7 @@
         👉🏻 Click the refresh button or swipe up top of the page to refresh the data \n
         👉🏻 Choose a card to see story details \n
         👉🏻 Pressing the add button to create a new story \n
-        👉🏻 Pressing the profile menu to open some settings \n
-        👉🏻 Pressing the jump up button to jump on the top of page from last story data
+        👉🏻 Pressing the profile menu to open some settings
     </string>
     <string name="UI_info_profile">
         You can do some action here that is : \n
@@ -106,8 +134,24 @@
         👉🏻 shutter button to take a picture using the camera \n
         👉🏻 switch button to rotate camera lens
     </string>
-    <string name="appwidget_text" translatable="false">EXAMPLE</string>
-    <string name="add_widget" translatable="false">Add widget</string>
-    <string name="app_widget_description" translatable="false">This is an app widget description</string>
-    <string name="title_activity_new_story_pick_location">NewStoryPickLocation</string>
+    <string name="UI_info_uploaded_story">
+        This section contains a collection of images that you upload to stories and save in your Android media storage folder. \n
+        Click on the image to see a preview and where the image is saved 👌.
+    </string>
+    <string name="UI_info_downloaded_story">
+        This section contains a collection of images that you download in stories and save in your Android media storage folder. \n
+        Click on the image to see a preview and where the image is saved 👌.
+    </string>
+    <string name="UI_validation_maps_select_area">The location must be selected first. Tap on the desired location to select the location</string>
+    <string name="UI_validation_permission_location">Give the app access to read your location</string>
+    <string name="UI_error_camera_error">Failed to launch camera</string>
+    <string name="UI_info_intent_image">Choose a picture</string>
+    <string name="UI_info_image_downloaded">Image downloaded successfully</string>
+
+    <!-- WIDGET -->
+    <string name="appwidget_text">Dico Story</string>
+    <string name="add_widget">Add Widget</string>
+    <string name="app_widget_description">Widget to see recent story</string>
+
+
 </resources>

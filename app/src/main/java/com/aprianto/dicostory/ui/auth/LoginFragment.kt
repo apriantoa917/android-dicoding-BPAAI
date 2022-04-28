@@ -56,12 +56,14 @@ class LoginFragment : Fragment() {
                     login.loginResult.token,
                     login.loginResult.userId,
                     login.loginResult.name,
-                    viewModel!!.tempEmail.value ?: Constanta.preferenceDefaultValue
+                    viewModel.tempEmail.value ?: Constanta.preferenceDefaultValue
                 )
             }
             vm.error.observe(viewLifecycleOwner) { error ->
-                if (error.isNotEmpty()) {
-                    Helper.showDialogInfo(requireContext(), error)
+                error?.let {
+                    if (it.isNotEmpty()) {
+                        Helper.showDialogInfo(requireContext(), it)
+                    }
                 }
             }
             vm.loading.observe(viewLifecycleOwner) { state ->
@@ -70,34 +72,42 @@ class LoginFragment : Fragment() {
         }
         settingViewModel.getUserPreferences(Constanta.UserPreferences.UserToken.name)
             .observe(viewLifecycleOwner) { token ->
-                // token changes -> redirect to Main Activity
+                // if token triggered change -> redirect to Main Activity
                 if (token != Constanta.preferenceDefaultValue) (activity as AuthActivity).routeToMainActivity()
             }
         binding.btnAction.setOnClickListener {
-            val email = binding.edEmail.text.toString()
-            val password = binding.edPassword.text.toString()
-//            if(binding.edEmail.error.isNotEmpty() and binding.edPassword.error.isNotEmpty()){
-//                binding.edEmail.requestFocus()
-//            }else{
-//                viewModel.login(email, password)
-//            }
-            when {
+            /*
+            *  NOTE REVIWER LALU :
+            *  - untuk pengecekan logic tidak dilakukan di sini namun di file custom view
+            *  - pengecekan disini -> jika input kosong tampilkan error field kosong
+            *  - selain pengecekan field kosong -> tampilkan logic error dari custom view
+            * */
 
-                email.isEmpty() or password.isEmpty() -> {
-                    binding.edEmail.error
-                }
-                !email.matches(Constanta.emailPattern) -> {
-                    binding.edEmail.error
-                }
-                password.length < 6 -> {
-                    binding.edPassword.error
-                }
-                else -> {
-                    viewModel.login(email, password)
-                }
+            /* check if input is empty or not */
+            if (binding.edEmail.text?.length ?: 0 <= 0) {
+                binding.edEmail.error = getString(R.string.UI_validation_empty_email)
+                binding.edEmail.requestFocus()
+            } else if (binding.edPassword.text?.length ?: 0 <= 0) {
+                binding.edPassword.error = getString(R.string.UI_validation_empty_password)
+                binding.edPassword.requestFocus()
+            }
+            /* input not empty -> check contains error */
+            else if (binding.edEmail.error?.length ?: 0 > 0) {
+                binding.edEmail.requestFocus()
+            } else if (binding.edPassword.error?.length ?: 0 > 0) {
+                binding.edPassword.requestFocus()
+            }
+            /* not contain error */
+            else {
+                val email = binding.edEmail.text.toString()
+                val password = binding.edPassword.text.toString()
+                viewModel.login(email, password)
             }
         }
         binding.btnRegister.setOnClickListener {
+            /* while view models contains error -> clear error before replace fragments (to hide dialog error)*/
+            viewModel.error.postValue("")
+
             parentFragmentManager.beginTransaction().apply {
                 replace(R.id.container, RegisterFragment(), RegisterFragment::class.java.simpleName)
                 /* shared element transition to main activity */

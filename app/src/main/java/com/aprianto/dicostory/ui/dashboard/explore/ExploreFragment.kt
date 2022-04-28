@@ -37,7 +37,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-
+import java.lang.StringBuilder
 
 class ExploreFragment : Fragment(), OnMapReadyCallback, GoogleMap.InfoWindowAdapter,
     AdapterView.OnItemSelectedListener {
@@ -45,8 +45,6 @@ class ExploreFragment : Fragment(), OnMapReadyCallback, GoogleMap.InfoWindowAdap
     private lateinit var mMap: GoogleMap
     private lateinit var binding: FragmentExploreBinding
     private val storyViewModel: StoryViewModel by viewModels()
-    private val zoomLevel =
-        arrayOf("Tampilan Default", "Provinsi", "Kota Saya", "Kecamatan Saya", "Sekitar Saya")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,6 +52,15 @@ class ExploreFragment : Fragment(), OnMapReadyCallback, GoogleMap.InfoWindowAdap
     ): View {
         binding = FragmentExploreBinding.inflate(inflater, container, false)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+
+        /* multilingual text for spinner */
+        val zoomLevel = arrayOf(
+            getString(R.string.const_text_adapter_maps_default),
+            getString(R.string.const_text_adapter_maps_province),
+            getString(R.string.const_text_adapter_maps_city),
+            getString(R.string.const_text_adapter_maps_district),
+            getString(R.string.const_text_adapter_maps_around)
+        )
 
         /* set up dropdown location scope */
         val adapter: ArrayAdapter<String> = ArrayAdapter<String>(
@@ -144,7 +151,10 @@ class ExploreFragment : Fragment(), OnMapReadyCallback, GoogleMap.InfoWindowAdap
             if (isGranted) {
                 getMyLocation()
             } else {
-                Helper.notifyGivePermission(requireContext(), "Berikan izin untuk lokasi")
+                Helper.notifyGivePermission(
+                    requireContext(),
+                    getString(R.string.UI_validation_permission_location)
+                )
             }
         }
 
@@ -170,7 +180,6 @@ class ExploreFragment : Fragment(), OnMapReadyCallback, GoogleMap.InfoWindowAdap
         } else {
             requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
-
     }
 
     private fun setMapStyle() {
@@ -183,26 +192,22 @@ class ExploreFragment : Fragment(), OnMapReadyCallback, GoogleMap.InfoWindowAdap
                     )
                 )
             if (!success) {
-                Log.e(TAG, "Style parsing failed.")
+                Log.e(Constanta.TAG_MAPS, "Style parsing  failed.")
             }
         } catch (exception: Resources.NotFoundException) {
-            Log.e(TAG, "Can't find style. Error: ", exception)
+            Log.e(Constanta.TAG_MAPS, "Can't find style. Error: ", exception)
         }
-    }
-
-    companion object {
-        private const val TAG = "MapsActivity"
     }
 
     override fun getInfoWindow(marker: Marker): View {
         val bindingTooltips =
             CustomTooltipMapsExploreBinding.inflate(LayoutInflater.from(requireContext()))
         val data: Story = marker.tag as Story
-        bindingTooltips.labelLocation.text = Helper.getStoryLocation(
+        bindingTooltips.labelLocation.text = Helper.parseAddressLocation(
             requireContext(),
             marker.position.latitude, marker.position.longitude
         )
-        bindingTooltips.name.text = "Story by ${data.name}"
+        bindingTooltips.name.text = StringBuilder("Story by ").append(data.name)
         bindingTooltips.image.setImageBitmap(Helper.bitmapFromURL(requireContext(), data.photoUrl))
         bindingTooltips.storyDescription.text = data.description
         bindingTooltips.storyUploadTime.text = Helper.getUploadStoryTime(data.createdAt)

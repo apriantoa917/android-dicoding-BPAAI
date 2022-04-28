@@ -10,29 +10,32 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <fragment
+        <androidx.fragment.app.FragmentContainerView
             android:id="@+id/map"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
         <Spinner
-            android:paddingStart="35dp"
             android:id="@+id/zoomType"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:layout_marginHorizontal="60dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/custom_story_desc"
-            android:padding="8dp"
+            android:paddingVertical="8dp"
+            android:paddingStart="36dp"
+            android:paddingEnd="0dp"
             app:backgroundTint="@null"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:layout_marginStart="10dp"
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:layout_marginStart="10dp"
+            android:contentDescription="@string/content_description_icon_maps"
             android:src="@drawable/ic_baseline_map_24"
             app:layout_constraintBottom_toBottomOf="@+id/zoomType"
             app:layout_constraintStart_toStartOf="@+id/zoomType"

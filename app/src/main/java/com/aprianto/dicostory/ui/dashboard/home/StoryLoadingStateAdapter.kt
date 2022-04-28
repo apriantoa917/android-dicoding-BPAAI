@@ -36,7 +36,6 @@ class StoryLoadingStateAdapter(private val retry: () -> Unit) :
             binding.progressBar.isVisible = loadState is LoadState.Loading
             binding.retryButton.isVisible = loadState is LoadState.Error
             binding.errorMsg.isVisible = loadState is LoadState.Error
-
         }
     }
 }

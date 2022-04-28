@@ -10,6 +10,7 @@
     android:padding="16dp">
 
     <ImageView
+        android:contentDescription="@string/content_description_avatar_dico"
         android:id="@+id/default_avatar"
         android:layout_width="25dp"
         android:layout_height="25dp"
@@ -29,6 +30,7 @@
         android:gravity="center_vertical"
         android:maxLines="1"
         android:paddingStart="10dp"
+        android:paddingEnd="0dp"
         android:scrollHorizontally="true"
         android:textColor="@color/dicoding_secondary_700"
         android:textSize="16sp"
@@ -49,7 +51,8 @@
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/default_avatar" />
+        app:layout_constraintTop_toBottomOf="@+id/default_avatar"
+        tools:ignore="UnusedAttribute" />
 
 
     <ImageView
@@ -61,7 +64,8 @@
         android:background="@color/light_gray_200"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/label_location" />
+        app:layout_constraintTop_toBottomOf="@+id/label_location"
+        android:contentDescription="@string/content_description_image_story" />
 
     <TextView
         android:id="@+id/label_info"
@@ -70,13 +74,14 @@
         android:layout_marginTop="8dp"
         android:gravity="center"
         android:lineHeight="20dp"
-        android:text="( Klik untuk melihat story )"
+        android:text="@string/const_text_tooltip_view_story"
         android:textColor="@color/gray"
         android:textSize="12sp"
         android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image" />
+        app:layout_constraintTop_toBottomOf="@+id/image"
+        tools:ignore="UnusedAttribute" />
 
     <TextView
         android:id="@+id/story_description"
@@ -90,7 +95,8 @@
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/label_info" />
+        app:layout_constraintTop_toBottomOf="@+id/label_info"
+        tools:ignore="UnusedAttribute" />
 
     <TextView
         android:id="@+id/story_upload_time"
@@ -100,11 +106,12 @@
         android:gravity="end"
         android:lineHeight="20dp"
         android:textColor="@color/gray"
-        android:textSize="10sp"
+        android:textSize="11sp"
         android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/story_description"
-        tools:text="30 April 2022 00.00" />
+        tools:text="30 April 2022 00.00"
+        tools:ignore="UnusedAttribute" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
