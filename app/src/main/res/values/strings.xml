@@ -9,7 +9,7 @@
     <string name="menu_title_bottom_nav_explore">Explore</string>
     <string name="menu_title_bottom_nav_profile">Profile</string>
     <string name="menu_title_info_dialog">Information</string>
-    <string name="menu_title_bottom_nav_downloaded">Downloaded</string>
+    <string name="menu_title_bottom_nav_folder">Folder</string>
 
 
     <!-- Content Description layout xml -->

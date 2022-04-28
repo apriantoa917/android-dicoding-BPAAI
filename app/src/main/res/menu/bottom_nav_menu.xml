@@ -23,7 +23,7 @@
     <item
         android:id="@+id/navigation_downloaded"
         android:icon="@drawable/ic_baseline_folder_24"
-        android:title="@string/menu_title_bottom_nav_downloaded"
+        android:title="@string/menu_title_bottom_nav_folder"
         app:showAsAction="ifRoom" />
 
     <item
