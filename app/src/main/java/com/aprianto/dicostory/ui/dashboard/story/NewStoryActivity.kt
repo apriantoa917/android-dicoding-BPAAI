@@ -119,11 +119,11 @@ class NewStoryActivity : AppCompatActivity() {
                     )
                     val btnOk = dialog.findViewById<Button>(R.id.button_ok)
                     btnOk.setOnClickListener {
+                        setResult(RESULT_OK)
                         finish()
                     }
                     dialog.show()
                 }
-
             }
             vm.loading.observe(this) {
                 binding.loading.root.visibility = it

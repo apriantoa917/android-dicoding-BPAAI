@@ -61,8 +61,8 @@ class HomeFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         rvAdapter.refresh()
         Timer().schedule(2000) {
             binding.swipeRefresh.isRefreshing = false
+            binding.rvStory.smoothScrollToPosition(0)
         }
-        binding.rvStory.scrollToPosition(0)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
