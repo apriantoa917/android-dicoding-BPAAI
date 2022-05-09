@@ -98,8 +98,9 @@ class CameraActivity : AppCompatActivity() {
                     NewStoryActivity.EXTRA_CAMERA_MODE,
                     cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA
                 )
-                this@CameraActivity.finish()
+                intent.flags = Intent.FLAG_ACTIVITY_FORWARD_RESULT
                 startActivity(intent)
+                this@CameraActivity.finish()
             }
         }
     }
@@ -128,15 +129,15 @@ class CameraActivity : AppCompatActivity() {
                 }
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-
                     val intent = Intent(this@CameraActivity, NewStoryActivity::class.java)
                     intent.putExtra(NewStoryActivity.EXTRA_PHOTO_RESULT, photoFile)
                     intent.putExtra(
                         NewStoryActivity.EXTRA_CAMERA_MODE,
                         cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA
                     )
-                    this@CameraActivity.finish()
+                    intent.flags = Intent.FLAG_ACTIVITY_FORWARD_RESULT
                     startActivity(intent)
+                    this@CameraActivity.finish()
                 }
             }
         )

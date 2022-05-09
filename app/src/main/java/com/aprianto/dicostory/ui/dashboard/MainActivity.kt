@@ -5,6 +5,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -15,8 +17,8 @@ import com.aprianto.dicostory.data.repository.remote.ApiConfig
 import com.aprianto.dicostory.data.viewmodel.*
 import com.aprianto.dicostory.databinding.ActivityMainBinding
 import com.aprianto.dicostory.ui.auth.AuthActivity
-import com.aprianto.dicostory.ui.dashboard.folder.FolderFragment
 import com.aprianto.dicostory.ui.dashboard.explore.ExploreFragment
+import com.aprianto.dicostory.ui.dashboard.folder.FolderFragment
 import com.aprianto.dicostory.ui.dashboard.home.HomeFragment
 import com.aprianto.dicostory.ui.dashboard.profile.ProfileFragment
 import com.aprianto.dicostory.ui.dashboard.story.CameraActivity
@@ -37,6 +39,8 @@ class MainActivity : AppCompatActivity() {
     private val pref = SettingPreferences.getInstance(dataStore)
     private val settingViewModel: SettingViewModel by viewModels { ViewModelSettingFactory(pref) }
     private var token = ""
+    private var fragmentHome: HomeFragment? = null
+    private lateinit var startNewStory: ActivityResultLauncher<Intent>
 
     @RequiresApi(Build.VERSION_CODES.M)
     @OptIn(DelicateCoroutinesApi::class)
@@ -45,19 +49,25 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         val fragmentProfile = ProfileFragment()
-        val fragmentHome = HomeFragment()
+        fragmentHome = HomeFragment()
         val fragmentExplore = ExploreFragment()
         val fragmentDownloaded = FolderFragment()
 
+        /* load latest story when new story successfully uploaded */
+        startNewStory =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == RESULT_OK) {
+                    fragmentHome?.onRefresh()
+                }
+            }
 
         /* obtain token for reuse in child fragments */
         settingViewModel.getUserPreferences(Constanta.UserPreferences.UserToken.name)
             .observe(this) {
                 token = "Bearer $it"
                 /* start load data after token obtained */
-                switchFragment(fragmentHome)
+                switchFragment(fragmentHome!!)
             }
 
         binding.bottomNavigationView.background = null // hide abnormal layer in bottom nav
@@ -65,7 +75,7 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigationView.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.navigation_home -> {
-                    switchFragment(fragmentHome)
+                    switchFragment(fragmentHome!!)
                     true
                 }
                 R.id.navigation_explore -> {
@@ -113,7 +123,8 @@ class MainActivity : AppCompatActivity() {
         binding.fab.setOnClickListener {
             /* ask permission for camera first before launch camera */
             if (Helper.isPermissionGranted(this, Manifest.permission.CAMERA)) {
-                startActivity(Intent(this, CameraActivity::class.java))
+                val intent = Intent(this@MainActivity, CameraActivity::class.java)
+                startNewStory.launch(intent)
             } else {
                 ActivityCompat.requestPermissions(
                     this@MainActivity,
@@ -164,6 +175,8 @@ class MainActivity : AppCompatActivity() {
 
         /* after return from other activity, reinitialize folder data (after download story i.e)*/
         loadFolderData()
+
+
     }
 
     /* return current token from dataPreference to child fragment */
